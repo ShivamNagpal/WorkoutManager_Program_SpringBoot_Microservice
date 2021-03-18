@@ -3,6 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE workout (
 	id bigserial NOT NULL,
+	uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
 	deleted bool NOT NULL DEFAULT false,
 	time_created date NOT NULL,
 	time_last_modified date NOT NULL,
@@ -10,7 +11,6 @@ CREATE TABLE workout (
 	"level" varchar NOT NULL,
 	description varchar NULL,
 	equipments varchar NULL,
-	uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
 	CONSTRAINT workout_pk PRIMARY KEY (id),
 	CONSTRAINT workout_uuid_un UNIQUE (uuid)
 );
