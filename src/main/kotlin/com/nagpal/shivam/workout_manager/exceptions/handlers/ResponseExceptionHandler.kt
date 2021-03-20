@@ -13,7 +13,7 @@ class ResponseExceptionHandler {
     fun handleResponseException(
         request: HttpServletRequest,
         exception: ResponseException
-    ): ResponseEntity<ResponseWrapper<Any>> {
-        return ResponseEntity(ResponseWrapper(exception.payload as Any, exception.message, false), exception.httpStatus)
+    ): ResponseEntity<ResponseWrapper<Any?>> {
+        return ResponseEntity(ResponseWrapper(exception.payload, exception.message, false), exception.httpStatus)
     }
 }
