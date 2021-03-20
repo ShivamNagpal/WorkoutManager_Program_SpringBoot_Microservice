@@ -1,20 +1,23 @@
 package com.nagpal.shivam.workout_manager.models
 
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Generated
+import org.hibernate.annotations.GenerationTime
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
-import javax.persistence.Column
-import javax.persistence.Id
-import javax.persistence.MappedSuperclass
+import java.util.*
+import javax.persistence.*
 
 @MappedSuperclass
 open class BaseModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
-    @Column(columnDefinition = "uuid", updatable = false)
-    val uuid: String? = null
-    val deleted: Boolean? = null
+    @Generated(value = GenerationTime.INSERT)
+    @Column(columnDefinition = "uuid", insertable = false, updatable = false)
+    val uuid: UUID? = null
+    val deleted: Boolean = false
 
     @CreationTimestamp
     @Column(columnDefinition = "DATE")
