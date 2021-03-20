@@ -7,6 +7,7 @@ import com.nagpal.shivam.workout_manager.services.IWorkoutService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
@@ -19,7 +20,7 @@ class WorkoutController @Autowired constructor(
 ) {
 
     @PostMapping
-    fun saveWorkout(@Valid workoutRequestDto: WorkoutRequestDto): ResponseEntity<ResponseWrapper<WorkoutResponseDto>> {
+    fun saveWorkout(@RequestBody @Valid workoutRequestDto: WorkoutRequestDto): ResponseEntity<ResponseWrapper<WorkoutResponseDto>> {
         val workoutResponseDto = workoutService.saveWorkout(workoutRequestDto)
         return ResponseEntity.ok(ResponseWrapper(workoutResponseDto))
     }

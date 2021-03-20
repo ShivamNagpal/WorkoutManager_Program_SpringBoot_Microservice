@@ -10,7 +10,7 @@ data class WorkoutResponseDto(
     val equipments: String?
 ) {
     constructor(workout: Workout) : this(
-        workout.uuid,
+        workout.uuid.toString(),
         workout.name,
         workout.level.toString(),
         workout.description,
