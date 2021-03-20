@@ -14,7 +14,6 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/workout")
-
 class WorkoutController @Autowired constructor(
     private val workoutService: IWorkoutService
 ) {
