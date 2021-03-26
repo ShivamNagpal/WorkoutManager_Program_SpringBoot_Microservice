@@ -21,7 +21,7 @@ class WorkoutService @Autowired constructor(
         } catch (e: IllegalArgumentException) {
             throw ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.INVALID_WORKOUT_LEVEL(workoutRequestDto.level)
+                ErrorMessages.INVALID_WORKOUT_LEVEL(workoutRequestDto.level!!)
             )
         }
         workout = workoutRepository.save(workout)
