@@ -8,4 +8,5 @@ import java.util.*
 interface SectionRepository : CrudRepository<Section, Long> {
     @Query(value = "select max(s.order) from Section s where s.workout.id = :workoutId")
     fun fetchMaxCount(workoutId: Long): Optional<Int>
+    fun findByUuid(uuid: UUID): Optional<Section>
 }

@@ -1,9 +1,14 @@
 package com.nagpal.shivam.workout_manager.services.impl
 
+import com.nagpal.shivam.workout_manager.dtos.request.SectionDrillRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionRequestDto
+import com.nagpal.shivam.workout_manager.dtos.response.SectionDrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.models.Section
+import com.nagpal.shivam.workout_manager.models.SectionDrill
+import com.nagpal.shivam.workout_manager.repositories.DrillRepository
+import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionRepository
 import com.nagpal.shivam.workout_manager.repositories.WorkoutRepository
 import com.nagpal.shivam.workout_manager.services.ISectionService
@@ -16,10 +21,12 @@ import java.util.*
 @Service
 class SectionService @Autowired constructor(
     private val workoutRepository: WorkoutRepository,
-    private val sectionRepository: SectionRepository
+    private val sectionRepository: SectionRepository,
+    private val drillRepository: DrillRepository,
+    private val sectionDrillRepository: SectionDrillRepository,
 ) : ISectionService {
     override fun saveSection(sectionRequestDto: SectionRequestDto): SectionResponseDto {
-        val workoutOptional = workoutRepository.findByUuid(UUID.fromString(sectionRequestDto.workoutId!!))
+        val workoutOptional = workoutRepository.findByUuid(UUID.fromString(sectionRequestDto.workoutId))
         if (workoutOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS)
         }
@@ -29,5 +36,30 @@ class SectionService @Autowired constructor(
         section.order = maxCount + 1
         section = sectionRepository.save(section)
         return SectionResponseDto(section)
+    }
+
+    override fun linkWorkout(sectionDrillRequestDto: SectionDrillRequestDto): SectionDrillResponseDto {
+        val sectionOptional = sectionRepository.findByUuid(UUID.fromString(sectionDrillRequestDto.sectionId))
+        if (sectionOptional.isEmpty) {
+            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.SECTION_UUID_DOES_NOT_EXISTS)
+        }
+        val drillOptional = drillRepository.findByUuid(UUID.fromString(sectionDrillRequestDto.drillId))
+        if (drillOptional.isEmpty) {
+            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.DRILL_UUID_DOES_NOT_EXISTS)
+        }
+        val section = sectionOptional.get()
+        val drill = drillOptional.get()
+        var sectionDrill = try {
+            SectionDrill(sectionDrillRequestDto, section, drill)
+        } catch (e: IllegalArgumentException) {
+            throw  ResponseException(
+                HttpStatus.BAD_REQUEST,
+                ErrorMessages.INVALID_DRILL_LENGTH_UNIT(sectionDrillRequestDto.units!!)
+            )
+        }
+        val maxCount = sectionDrillRepository.fetchMaxCount(section.id!!).orElse(0)
+        sectionDrill.order = maxCount + 1
+        sectionDrill = sectionDrillRepository.save(sectionDrill)
+        return SectionDrillResponseDto(sectionDrill)
     }
 }
