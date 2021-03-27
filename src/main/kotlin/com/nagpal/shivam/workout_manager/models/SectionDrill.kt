@@ -16,4 +16,7 @@ class SectionDrill : BaseModel() {
 
     @Enumerated(EnumType.STRING)
     val units: DrillLengthUnits? = null
+
+    @Column(name = "\"order\"")
+    var order: Int? = null
 }
