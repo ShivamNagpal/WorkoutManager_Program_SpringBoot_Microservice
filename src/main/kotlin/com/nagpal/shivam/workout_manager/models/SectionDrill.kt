@@ -1,22 +1,30 @@
 package com.nagpal.shivam.workout_manager.models
 
+import com.nagpal.shivam.workout_manager.dtos.request.SectionDrillRequestDto
 import com.nagpal.shivam.workout_manager.enums.DrillLengthUnits
 import javax.persistence.*
 
 @Entity
-class SectionDrill : BaseModel() {
+class SectionDrill() : BaseModel() {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
-    val section: Section? = null
+    var section: Section? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "drill_id")
-    val drill: Drill? = null
-    val length: Long? = null
+    var drill: Drill? = null
+    var length: Long? = null
 
     @Enumerated(EnumType.STRING)
-    val units: DrillLengthUnits? = null
+    var units: DrillLengthUnits? = null
 
     @Column(name = "\"order\"")
     var order: Int? = null
+
+    constructor(sectionDrillRequestDto: SectionDrillRequestDto, section: Section, drill: Drill) : this() {
+        this.section = section
+        this.drill = drill
+        this.length = sectionDrillRequestDto.length
+        this.units = DrillLengthUnits.valueOf(sectionDrillRequestDto.units!!.toUpperCase())
+    }
 }

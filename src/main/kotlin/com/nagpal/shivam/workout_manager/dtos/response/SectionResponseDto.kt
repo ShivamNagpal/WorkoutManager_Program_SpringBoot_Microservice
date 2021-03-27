@@ -4,13 +4,15 @@ import com.nagpal.shivam.workout_manager.models.Section
 
 data class SectionResponseDto(
     val uuid: String? = null,
+    val workoutId: String?,
     val name: String? = null,
     val repetitions: Int? = null,
     val restingInfo: String? = null,
-    val order: Int? = null
+    val order: Int? = null,
 ) {
     constructor(section: Section) : this(
         section.uuid.toString(),
+        section.workout!!.uuid.toString(),
         section.name,
         section.repetitions,
         section.restingInfo,
