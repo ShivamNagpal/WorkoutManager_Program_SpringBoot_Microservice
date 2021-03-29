@@ -8,4 +8,7 @@ import java.util.*
 interface SectionDrillRepository : CrudRepository<SectionDrill, Long> {
     @Query(value = "select max(sd.order) from SectionDrill sd where sd.section.id = :sectionId")
     fun fetchMaxCount(sectionId: Long): Optional<Int>
+
+    @Query(value = "select sd from SectionDrill sd where sd.section.id in (:sectionIds) order by sd.order")
+    fun findBySectionIds(sectionIds: List<Long>): List<SectionDrill>
 }
