@@ -16,6 +16,18 @@ repositories {
     mavenCentral()
 }
 
+/**
+ * To allow Hibernate to create inherited proxy classes for lazy fetching
+ * The support is provided by the plugin.spring and plugin.jpa
+ *
+ * Note: Entity classes should have an empty constructor as well
+ */
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

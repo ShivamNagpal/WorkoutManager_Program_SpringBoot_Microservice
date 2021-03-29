@@ -20,6 +20,7 @@ class Section() : BaseModel() {
 
     constructor(sectionRequestDto: SectionRequestDto, workout: Workout) : this() {
         this.workout = workout
+        this.workoutId = workout.id
         this.name = sectionRequestDto.name
         this.repetitions = sectionRequestDto.repetitions
         this.restingInfo = sectionRequestDto.restingInfo

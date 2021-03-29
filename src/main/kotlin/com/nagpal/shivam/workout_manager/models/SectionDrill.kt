@@ -30,6 +30,8 @@ class SectionDrill() : BaseModel() {
     constructor(sectionDrillRequestDto: SectionDrillRequestDto, section: Section, drill: Drill) : this() {
         this.section = section
         this.drill = drill
+        this.sectionId = section.id
+        this.drillId = drill.id
         this.length = sectionDrillRequestDto.length
         this.units = DrillLengthUnits.valueOf(sectionDrillRequestDto.units!!.toUpperCase())
     }
