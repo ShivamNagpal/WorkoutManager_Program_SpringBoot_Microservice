@@ -89,6 +89,7 @@ class WorkoutService @Autowired constructor(
                             drillResponseDto.length = sectionDrill.length
                             drillResponseDto.units = sectionDrill.units!!.toString()
                             drillResponseDto.order = sectionDrill.order
+                            drillResponseDto.description = sectionDrill.description
                         }
                     }
                 }

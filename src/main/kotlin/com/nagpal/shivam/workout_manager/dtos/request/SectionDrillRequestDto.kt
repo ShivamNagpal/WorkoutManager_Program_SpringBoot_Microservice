@@ -17,4 +17,6 @@ data class SectionDrillRequestDto(
 
     @field:NotBlank
     val units: String? = null,
+
+    val description: String? = null,
 )

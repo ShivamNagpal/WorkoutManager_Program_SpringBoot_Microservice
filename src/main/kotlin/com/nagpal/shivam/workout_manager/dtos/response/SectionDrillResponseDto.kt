@@ -9,6 +9,7 @@ data class SectionDrillResponseDto(
     val drillId: String? = null,
     val length: Long? = null,
     val units: String? = null,
+    var description: String? = null,
 ) {
     constructor(sectionDrill: SectionDrill, sectionUuid: UUID?, drillUUID: UUID?) : this(
         sectionDrill.uuid.toString(),
@@ -16,5 +17,6 @@ data class SectionDrillResponseDto(
         drillUUID?.toString(),
         sectionDrill.length,
         sectionDrill.units.toString(),
+        sectionDrill.description,
     )
 }

@@ -24,6 +24,8 @@ class SectionDrill() : BaseModel() {
     @Enumerated(EnumType.STRING)
     var units: DrillLengthUnits? = null
 
+    var description: String? = null
+
     @Column(name = "\"order\"")
     var order: Int? = null
 
@@ -34,5 +36,6 @@ class SectionDrill() : BaseModel() {
         this.drillId = drill.id
         this.length = sectionDrillRequestDto.length
         this.units = DrillLengthUnits.valueOf(sectionDrillRequestDto.units!!.toUpperCase())
+        this.description = sectionDrillRequestDto.description
     }
 }

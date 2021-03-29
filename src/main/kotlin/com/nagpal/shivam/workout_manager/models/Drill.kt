@@ -6,10 +6,8 @@ import javax.persistence.Entity
 @Entity
 class Drill() : BaseModel() {
     var name: String? = null
-    var description: String? = null
 
     constructor(drillRequestDto: DrillRequestDto) : this() {
         this.name = drillRequestDto.name
-        this.description = drillRequestDto.description
     }
 }
