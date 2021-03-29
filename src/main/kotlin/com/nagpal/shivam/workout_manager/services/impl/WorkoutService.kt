@@ -75,8 +75,7 @@ class WorkoutService @Autowired constructor(
             val drillsMappedById = drills.map { it.id!! to it }.toMap()
 
             for (section in sections) {
-                val sectionResponseDto = SectionResponseDto(section)
-                sectionResponseDto.workoutId = null
+                val sectionResponseDto = SectionResponseDto(section, null)
                 sectionResponseDtoMutableList.add(sectionResponseDto)
                 val sectionDrillsForCurrentSection = sectionDrillsGroupedBySectionId[section.id]
                 if (sectionDrillsForCurrentSection != null && sectionDrillsForCurrentSection.isNotEmpty()) {

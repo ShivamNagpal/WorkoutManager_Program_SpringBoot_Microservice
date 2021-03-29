@@ -2,6 +2,7 @@ package com.nagpal.shivam.workout_manager.dtos.response
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.nagpal.shivam.workout_manager.models.Section
+import java.util.*
 
 data class SectionResponseDto(
     val uuid: String? = null,
@@ -14,9 +15,9 @@ data class SectionResponseDto(
     @field:JsonInclude(JsonInclude.Include.NON_NULL)
     var drills: List<DrillResponseDto>? = null,
 ) {
-    constructor(section: Section) : this(
+    constructor(section: Section, workoutUuid: UUID?) : this(
         section.uuid.toString(),
-        section.workout!!.uuid.toString(),
+        workoutUuid?.toString(),
         section.name,
         section.repetitions,
         section.restingInfo,
