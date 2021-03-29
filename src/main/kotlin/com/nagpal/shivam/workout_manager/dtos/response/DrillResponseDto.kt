@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.nagpal.shivam.workout_manager.models.Drill
 
 data class DrillResponseDto(
-    val uuid: String? = null,
+    var uuid: String? = null,
     var name: String? = null,
     @field:JsonInclude(JsonInclude.Include.NON_NULL)
     var length: Long? = null,
