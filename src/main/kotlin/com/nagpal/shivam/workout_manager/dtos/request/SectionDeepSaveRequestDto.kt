@@ -5,10 +5,7 @@ import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-data class SectionRequestDto(
-    @field:NotBlank
-    val workoutId: String?,
-
+data class SectionDeepSaveRequestDto(
     @field:NotBlank
     val name: String?,
 
@@ -16,6 +13,7 @@ data class SectionRequestDto(
     @field:Min(value = 1)
     val repetitions: Int?,
     val restingInfo: String?,
+
     @field:Valid
     val drills: List<DrillDeepSaveRequestDto>? = null,
 )

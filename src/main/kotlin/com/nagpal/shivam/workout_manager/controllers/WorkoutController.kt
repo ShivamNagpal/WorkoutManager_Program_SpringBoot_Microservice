@@ -16,8 +16,11 @@ class WorkoutController @Autowired constructor(
 ) {
 
     @PostMapping
-    fun saveWorkout(@RequestBody @Valid workoutRequestDto: WorkoutRequestDto): ResponseEntity<ResponseWrapper<WorkoutResponseDto>> {
-        val workoutResponseDto = workoutService.saveWorkout(workoutRequestDto)
+    fun saveWorkout(
+        @RequestBody @Valid workoutRequestDto: WorkoutRequestDto,
+        @RequestParam(name = "deepSave", defaultValue = "false") deepSave: Boolean
+    ): ResponseEntity<ResponseWrapper<WorkoutResponseDto>> {
+        val workoutResponseDto = workoutService.saveWorkout(workoutRequestDto, deepSave)
         return ResponseEntity.ok(ResponseWrapper(workoutResponseDto))
     }
 

@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.models
 
+import com.nagpal.shivam.workout_manager.dtos.request.SectionDeepSaveRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionRequestDto
 import javax.persistence.*
 
@@ -24,5 +25,13 @@ class Section() : BaseModel() {
         this.name = sectionRequestDto.name
         this.repetitions = sectionRequestDto.repetitions
         this.restingInfo = sectionRequestDto.restingInfo
+    }
+
+    constructor(sectionDeepSaveRequestDto: SectionDeepSaveRequestDto, workout: Workout) : this() {
+        this.workout = workout
+        this.workoutId = workout.id
+        this.name = sectionDeepSaveRequestDto.name
+        this.repetitions = sectionDeepSaveRequestDto.repetitions
+        this.restingInfo = sectionDeepSaveRequestDto.restingInfo
     }
 }
