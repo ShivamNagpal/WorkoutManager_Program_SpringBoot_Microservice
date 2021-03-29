@@ -13,6 +13,12 @@ class SectionDrill() : BaseModel() {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "drill_id")
     var drill: Drill? = null
+
+    @Column(name = "section_id", insertable = false, updatable = false)
+    var sectionId: Long? = null
+
+    @Column(name = "drill_id", insertable = false, updatable = false)
+    var drillId: Long? = null
     var length: Long? = null
 
     @Enumerated(EnumType.STRING)
