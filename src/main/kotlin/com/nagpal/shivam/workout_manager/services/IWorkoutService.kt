@@ -7,4 +7,5 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 interface IWorkoutService {
     fun saveWorkout(workoutRequestDto: WorkoutRequestDto): WorkoutResponseDto
+    fun getWorkouts(page: Int, size: Int): List<WorkoutResponseDto>
 }

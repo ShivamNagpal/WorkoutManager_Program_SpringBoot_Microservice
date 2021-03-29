@@ -8,6 +8,7 @@ import com.nagpal.shivam.workout_manager.repositories.WorkoutRepository
 import com.nagpal.shivam.workout_manager.services.IWorkoutService
 import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
@@ -26,5 +27,11 @@ class WorkoutService @Autowired constructor(
         }
         workout = workoutRepository.save(workout)
         return WorkoutResponseDto(workout)
+    }
+
+    override fun getWorkouts(page: Int, size: Int): List<WorkoutResponseDto> {
+        val pageRequest = PageRequest.of(page, size)
+        val workoutPage = workoutRepository.findAll(pageRequest)
+        return workoutPage.content.map { WorkoutResponseDto(it) }
     }
 }
