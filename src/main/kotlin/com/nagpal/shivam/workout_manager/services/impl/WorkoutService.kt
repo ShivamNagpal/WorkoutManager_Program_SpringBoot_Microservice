@@ -5,6 +5,9 @@ import com.nagpal.shivam.workout_manager.dtos.response.DrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.WorkoutResponseDto
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
+import com.nagpal.shivam.workout_manager.models.Drill
+import com.nagpal.shivam.workout_manager.models.Section
+import com.nagpal.shivam.workout_manager.models.SectionDrill
 import com.nagpal.shivam.workout_manager.models.Workout
 import com.nagpal.shivam.workout_manager.repositories.DrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
@@ -25,7 +28,7 @@ class WorkoutService @Autowired constructor(
     private val sectionDrillRepository: SectionDrillRepository,
     private val drillRepository: DrillRepository,
 ) : IWorkoutService {
-    override fun saveWorkout(workoutRequestDto: WorkoutRequestDto): WorkoutResponseDto {
+    override fun saveWorkout(workoutRequestDto: WorkoutRequestDto, deepSave: Boolean): WorkoutResponseDto {
         var workout = try {
             Workout(workoutRequestDto)
         } catch (e: IllegalArgumentException) {
@@ -35,7 +38,57 @@ class WorkoutService @Autowired constructor(
             )
         }
         workout = workoutRepository.save(workout)
-        return WorkoutResponseDto(workout)
+        val workoutResponseDto = WorkoutResponseDto(workout)
+        if (deepSave) {
+            deepSave(workoutRequestDto, workout, workoutResponseDto)
+        }
+        return workoutResponseDto
+    }
+
+    fun deepSave(workoutRequestDto: WorkoutRequestDto, workout: Workout, workoutResponseDto: WorkoutResponseDto) {
+        val sectionDeepSaveRequestDtos = workoutRequestDto.sections
+        val sectionList = mutableListOf<Section>()
+        val drillMapByName = mutableMapOf<String, Drill>()
+        val sectionDrillList = mutableListOf<SectionDrill>()
+        if (sectionDeepSaveRequestDtos != null) {
+            for ((sectionIndex, sectionDeepSaveRequestDto) in sectionDeepSaveRequestDtos.withIndex()) {
+                val section = Section(sectionDeepSaveRequestDto, workout)
+                section.order = sectionIndex + 1
+                sectionList.add(section)
+                val drillDeepSaveRequestDtos = sectionDeepSaveRequestDto.drills
+                if (drillDeepSaveRequestDtos != null) {
+                    for ((drillIndex, drillDeepSaveRequestDto) in drillDeepSaveRequestDtos.withIndex()) {
+                        val drill = Drill(drillDeepSaveRequestDto)
+                        drillMapByName[drill.name!!] = drill
+                        val sectionDrill = try {
+                            SectionDrill(drillDeepSaveRequestDto, section, drill)
+                        } catch (e: IllegalArgumentException) {
+                            throw ResponseException(
+                                HttpStatus.BAD_REQUEST,
+                                ErrorMessages.INVALID_DRILL_LENGTH_UNIT(drillDeepSaveRequestDto.units!!)
+                            )
+                        }
+                        sectionDrill.order = drillIndex + 1
+                        sectionDrillList.add(sectionDrill)
+                    }
+                }
+            }
+        }
+        val existingDrills = drillRepository.findByNames(drillMapByName.keys)
+        existingDrills.forEach {
+            drillMapByName[it.name!!] = it
+        }
+        val drillList = drillMapByName.values
+        sectionRepository.saveAll(sectionList)
+        drillRepository.saveAll(drillList)
+        sectionDrillList.forEach{
+            it.drill = drillMapByName[it.drill!!.name]
+        }
+        sectionDrillRepository.saveAll(sectionDrillList)
+        sectionDrillList.forEach{
+            it.copyForeignKeyIdsToTheFields()
+        }
+        deepFetch(workoutResponseDto, sectionList, sectionDrillList, drillList)
     }
 
     override fun getWorkouts(page: Int, size: Int): List<WorkoutResponseDto> {
@@ -64,32 +117,44 @@ class WorkoutService @Autowired constructor(
     fun deepFetch(workout: Workout, workoutResponseDto: WorkoutResponseDto) {
         val sections = sectionRepository.findByWorkoutId(workout.id!!)
         if (sections.isNotEmpty()) {
-            val sectionResponseDtoMutableList = mutableListOf<SectionResponseDto>()
-            workoutResponseDto.sections = sectionResponseDtoMutableList
             val sectionIds = sections.map { it.id!! }
             val sectionDrills = sectionDrillRepository.findBySectionIds(sectionIds)
-            val sectionDrillsGroupedBySectionId = sectionDrills.groupBy { it.sectionId!! }
+            if (sectionDrills.isNotEmpty()) {
+                val drillIds = sectionDrills.map { it.drillId!! }
+                val drills = drillRepository.findAllById(drillIds)
+                deepFetch(workoutResponseDto, sections, sectionDrills, drills)
+            }
+        }
+    }
 
-            val drillIds = sectionDrills.map { it.drillId!! }
-            val drills = drillRepository.findAllById(drillIds)
-            val drillsMappedById = drills.map { it.id!! to it }.toMap()
+    fun deepFetch(
+        workoutResponseDto: WorkoutResponseDto,
+        sections: Iterable<Section>,
+        sectionDrills: Iterable<SectionDrill>,
+        drills: Iterable<Drill>
+    ) {
+        val sectionResponseDtoMutableList = mutableListOf<SectionResponseDto>()
+        workoutResponseDto.sections = sectionResponseDtoMutableList
 
-            for (section in sections) {
-                val sectionResponseDto = SectionResponseDto(section, null)
-                sectionResponseDtoMutableList.add(sectionResponseDto)
-                val sectionDrillsForCurrentSection = sectionDrillsGroupedBySectionId[section.id]
-                if (sectionDrillsForCurrentSection != null && sectionDrillsForCurrentSection.isNotEmpty()) {
-                    val drillResponseDtoMutableList = mutableListOf<DrillResponseDto>()
-                    sectionResponseDto.drills = drillResponseDtoMutableList
-                    for (sectionDrill in sectionDrillsForCurrentSection) {
-                        val drill = drillsMappedById[sectionDrill.drillId!!]
-                        if (drill != null) {
-                            val drillResponseDto = DrillResponseDto(drill)
-                            drillResponseDtoMutableList.add(drillResponseDto)
-                            drillResponseDto.length = sectionDrill.length
-                            drillResponseDto.units = sectionDrill.units!!.toString()
-                            drillResponseDto.order = sectionDrill.order
-                        }
+        val sectionDrillsGroupedBySectionId = sectionDrills.groupBy { it.sectionId!! }
+        val drillsMappedById = drills.map { it.id!! to it }.toMap()
+        for (section in sections) {
+            val sectionResponseDto = SectionResponseDto(section, null)
+            sectionResponseDtoMutableList.add(sectionResponseDto)
+            val sectionDrillsForCurrentSection = sectionDrillsGroupedBySectionId[section.id]
+            if (sectionDrillsForCurrentSection != null && sectionDrillsForCurrentSection.isNotEmpty()) {
+                val drillResponseDtoMutableList = mutableListOf<DrillResponseDto>()
+                sectionResponseDto.drills = drillResponseDtoMutableList
+                for (sectionDrill in sectionDrillsForCurrentSection) {
+                    val drill = drillsMappedById[sectionDrill.drillId!!]
+                    if (drill != null) {
+                        val drillResponseDto = DrillResponseDto(drill)
+                        drillResponseDtoMutableList.add(drillResponseDto)
+                        drillResponseDto.uuid = sectionDrill.uuid?.toString()
+                        drillResponseDto.length = sectionDrill.length
+                        drillResponseDto.units = sectionDrill.units!!.toString()
+                        drillResponseDto.order = sectionDrill.order
+                        drillResponseDto.description = sectionDrill.description
                     }
                 }
             }

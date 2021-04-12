@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.models
 
+import com.nagpal.shivam.workout_manager.dtos.request.DrillDeepSaveRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionDrillRequestDto
 import com.nagpal.shivam.workout_manager.enums.DrillLengthUnits
 import javax.persistence.*
@@ -24,6 +25,8 @@ class SectionDrill() : BaseModel() {
     @Enumerated(EnumType.STRING)
     var units: DrillLengthUnits? = null
 
+    var description: String? = null
+
     @Column(name = "\"order\"")
     var order: Int? = null
 
@@ -34,5 +37,23 @@ class SectionDrill() : BaseModel() {
         this.drillId = drill.id
         this.length = sectionDrillRequestDto.length
         this.units = DrillLengthUnits.valueOf(sectionDrillRequestDto.units!!.toUpperCase())
+        this.description = sectionDrillRequestDto.description
+    }
+
+    constructor(
+        drillDeepSaveRequestDto: DrillDeepSaveRequestDto,
+        section: Section,
+        drill: Drill
+    ) : this() {
+        this.section = section
+        this.drill = drill
+        this.length = drillDeepSaveRequestDto.length
+        this.units = DrillLengthUnits.valueOf(drillDeepSaveRequestDto.units!!.toUpperCase())
+        this.description = drillDeepSaveRequestDto.description
+    }
+
+    fun copyForeignKeyIdsToTheFields() {
+        this.sectionId = this.section!!.id
+        this.drillId = this.drill!!.id
     }
 }

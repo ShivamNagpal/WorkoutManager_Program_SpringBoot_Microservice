@@ -4,13 +4,9 @@ import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-data class SectionDrillRequestDto(
+data class DrillDeepSaveRequestDto(
     @field:NotBlank
-    val sectionId: String? = null,
-
-    @field:NotBlank
-    val drillId: String? = null,
-
+    val name: String? = null,
     @field:NotNull
     @field:Min(value = 1)
     val length: Long? = null,

@@ -1,15 +1,18 @@
 package com.nagpal.shivam.workout_manager.models
 
 import com.nagpal.shivam.workout_manager.dtos.request.DrillRequestDto
+import com.nagpal.shivam.workout_manager.dtos.request.DrillDeepSaveRequestDto
 import javax.persistence.Entity
 
 @Entity
 class Drill() : BaseModel() {
     var name: String? = null
-    var description: String? = null
 
     constructor(drillRequestDto: DrillRequestDto) : this() {
         this.name = drillRequestDto.name
-        this.description = drillRequestDto.description
+    }
+
+    constructor(drillDeepSaveRequestDto: DrillDeepSaveRequestDto) : this() {
+        this.name = drillDeepSaveRequestDto.name
     }
 }
