@@ -54,7 +54,7 @@ class SectionService @Autowired constructor(
         } catch (e: IllegalArgumentException) {
             throw  ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.INVALID_DRILL_LENGTH_UNIT(sectionDrillRequestDto.units!!)
+                ErrorMessages.invalidDrillLengthUnit(sectionDrillRequestDto.units!!)
             )
         }
         val maxCount = sectionDrillRepository.fetchMaxCount(section.id!!).orElse(0)

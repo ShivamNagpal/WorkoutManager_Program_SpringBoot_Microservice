@@ -34,7 +34,7 @@ class WorkoutService @Autowired constructor(
         } catch (e: IllegalArgumentException) {
             throw ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.INVALID_WORKOUT_LEVEL(workoutRequestDto.level!!)
+                ErrorMessages.invalidWorkoutLevel(workoutRequestDto.level!!)
             )
         }
         workout = workoutRepository.save(workout)
@@ -65,7 +65,7 @@ class WorkoutService @Autowired constructor(
                         } catch (e: IllegalArgumentException) {
                             throw ResponseException(
                                 HttpStatus.BAD_REQUEST,
-                                ErrorMessages.INVALID_DRILL_LENGTH_UNIT(drillDeepSaveRequestDto.units!!)
+                                ErrorMessages.invalidDrillLengthUnit(drillDeepSaveRequestDto.units!!)
                             )
                         }
                         sectionDrill.order = drillIndex + 1
