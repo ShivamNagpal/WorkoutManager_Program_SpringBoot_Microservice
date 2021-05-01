@@ -4,6 +4,10 @@ import com.nagpal.shivam.workout_manager.dtos.request.WorkoutRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.DrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.WorkoutResponseDto
+import com.nagpal.shivam.workout_manager.dtos.transformers.DrillTransformer
+import com.nagpal.shivam.workout_manager.dtos.transformers.SectionDrillTransformer
+import com.nagpal.shivam.workout_manager.dtos.transformers.SectionTransformer
+import com.nagpal.shivam.workout_manager.dtos.transformers.WorkoutTransformer
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.models.Drill
 import com.nagpal.shivam.workout_manager.models.Section
@@ -27,14 +31,18 @@ class WorkoutService @Autowired constructor(
     private val sectionRepository: SectionRepository,
     private val sectionDrillRepository: SectionDrillRepository,
     private val drillRepository: DrillRepository,
+    private val drillTransformer: DrillTransformer,
+    private val workoutTransformer: WorkoutTransformer,
+    private val sectionTransformer: SectionTransformer,
+    private val sectionDrillTransformer: SectionDrillTransformer,
 ) : IWorkoutService {
     override fun saveWorkout(workoutRequestDto: WorkoutRequestDto, deepSave: Boolean): WorkoutResponseDto {
         var workout = try {
-            Workout(workoutRequestDto)
+            workoutTransformer.convertWorkoutRequestDtoToWorkout(workoutRequestDto)
         } catch (e: IllegalArgumentException) {
             throw ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.INVALID_WORKOUT_LEVEL(workoutRequestDto.level!!)
+                ErrorMessages.invalidWorkoutLevel(workoutRequestDto.level!!)
             )
         }
         workout = workoutRepository.save(workout)
@@ -52,20 +60,25 @@ class WorkoutService @Autowired constructor(
         val sectionDrillList = mutableListOf<SectionDrill>()
         if (sectionDeepSaveRequestDtos != null) {
             for ((sectionIndex, sectionDeepSaveRequestDto) in sectionDeepSaveRequestDtos.withIndex()) {
-                val section = Section(sectionDeepSaveRequestDto, workout)
+                val section =
+                    sectionTransformer.convertSectionDeepSaveRequestDtoToSection(sectionDeepSaveRequestDto, workout)
                 section.order = sectionIndex + 1
                 sectionList.add(section)
                 val drillDeepSaveRequestDtos = sectionDeepSaveRequestDto.drills
                 if (drillDeepSaveRequestDtos != null) {
                     for ((drillIndex, drillDeepSaveRequestDto) in drillDeepSaveRequestDtos.withIndex()) {
-                        val drill = Drill(drillDeepSaveRequestDto)
+                        val drill = drillTransformer.convertDrillDeepSaveRequestDtoToDrill(drillDeepSaveRequestDto)
                         drillMapByName[drill.name!!] = drill
                         val sectionDrill = try {
-                            SectionDrill(drillDeepSaveRequestDto, section, drill)
+                            sectionDrillTransformer.convertDrillDeepSaveRequestDtoToSectionDrill(
+                                drillDeepSaveRequestDto,
+                                section,
+                                drill
+                            )
                         } catch (e: IllegalArgumentException) {
                             throw ResponseException(
                                 HttpStatus.BAD_REQUEST,
-                                ErrorMessages.INVALID_DRILL_LENGTH_UNIT(drillDeepSaveRequestDto.units!!)
+                                ErrorMessages.invalidDrillLengthUnit(drillDeepSaveRequestDto.units!!)
                             )
                         }
                         sectionDrill.order = drillIndex + 1
@@ -81,11 +94,11 @@ class WorkoutService @Autowired constructor(
         val drillList = drillMapByName.values
         sectionRepository.saveAll(sectionList)
         drillRepository.saveAll(drillList)
-        sectionDrillList.forEach{
+        sectionDrillList.forEach {
             it.drill = drillMapByName[it.drill!!.name]
         }
         sectionDrillRepository.saveAll(sectionDrillList)
-        sectionDrillList.forEach{
+        sectionDrillList.forEach {
             it.copyForeignKeyIdsToTheFields()
         }
         deepFetch(workoutResponseDto, sectionList, sectionDrillList, drillList)

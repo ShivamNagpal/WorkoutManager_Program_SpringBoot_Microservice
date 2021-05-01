@@ -4,9 +4,9 @@ import com.nagpal.shivam.workout_manager.dtos.request.SectionDrillRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionDrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
+import com.nagpal.shivam.workout_manager.dtos.transformers.SectionDrillTransformer
+import com.nagpal.shivam.workout_manager.dtos.transformers.SectionTransformer
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
-import com.nagpal.shivam.workout_manager.models.Section
-import com.nagpal.shivam.workout_manager.models.SectionDrill
 import com.nagpal.shivam.workout_manager.repositories.DrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionRepository
@@ -24,6 +24,8 @@ class SectionService @Autowired constructor(
     private val sectionRepository: SectionRepository,
     private val drillRepository: DrillRepository,
     private val sectionDrillRepository: SectionDrillRepository,
+    private val sectionTransformer: SectionTransformer,
+    private val sectionDrillTransformer: SectionDrillTransformer,
 ) : ISectionService {
     override fun saveSection(sectionRequestDto: SectionRequestDto): SectionResponseDto {
         val workoutOptional = workoutRepository.findByUuid(UUID.fromString(sectionRequestDto.workoutId))
@@ -31,7 +33,7 @@ class SectionService @Autowired constructor(
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS)
         }
         val workout = workoutOptional.get()
-        var section = Section(sectionRequestDto, workout)
+        var section = sectionTransformer.convertSectionRequestDtoToSection(sectionRequestDto, workout)
         val maxCount = sectionRepository.fetchMaxCount(workout.id!!).orElse(0)
         section.order = maxCount + 1
         section = sectionRepository.save(section)
@@ -50,11 +52,11 @@ class SectionService @Autowired constructor(
         val section = sectionOptional.get()
         val drill = drillOptional.get()
         var sectionDrill = try {
-            SectionDrill(sectionDrillRequestDto, section, drill)
+            sectionDrillTransformer.convertSectionDrillRequestDtoToSection(sectionDrillRequestDto, section, drill)
         } catch (e: IllegalArgumentException) {
             throw  ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.INVALID_DRILL_LENGTH_UNIT(sectionDrillRequestDto.units!!)
+                ErrorMessages.invalidDrillLengthUnit(sectionDrillRequestDto.units!!)
             )
         }
         val maxCount = sectionDrillRepository.fetchMaxCount(section.id!!).orElse(0)
