@@ -1,6 +1,7 @@
 package com.nagpal.shivam.workout_manager.utils
 
 object ErrorMessages {
+    const val PROGRAM_UUID_NOT_FOUND: String = "Program UUID doesn't exists"
     const val ERROR_VALIDATING_THE_FIELDS: String = "Error while validating the request body"
     const val WORKOUT_UUID_DOES_NOT_EXISTS: String = "Workout uuid does not exists"
     const val SECTION_UUID_DOES_NOT_EXISTS: String = "Section uuid does not exists"
