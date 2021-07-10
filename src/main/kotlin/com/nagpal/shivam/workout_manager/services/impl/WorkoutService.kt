@@ -46,7 +46,7 @@ class WorkoutService @Autowired constructor(
             )
         }
         workout = workoutRepository.save(workout)
-        val workoutResponseDto = WorkoutResponseDto(workout)
+        val workoutResponseDto = workoutTransformer.convertWorkoutToWorkoutResponseDto(workout)
         if (deepSave) {
             deepSave(workoutRequestDto, workout, workoutResponseDto)
         }
@@ -107,7 +107,7 @@ class WorkoutService @Autowired constructor(
     override fun getWorkouts(page: Int, size: Int): List<WorkoutResponseDto> {
         val pageRequest = PageRequest.of(page, size)
         val workoutPage = workoutRepository.findAll(pageRequest)
-        return workoutPage.content.map { WorkoutResponseDto(it) }
+        return workoutPage.content.map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
     }
 
     override fun getWorkoutByUuid(uuidString: String, deepFetch: Boolean): WorkoutResponseDto {
@@ -120,7 +120,7 @@ class WorkoutService @Autowired constructor(
                 )
             }
 
-        val workoutResponseDto = WorkoutResponseDto(workout)
+        val workoutResponseDto = workoutTransformer.convertWorkoutToWorkoutResponseDto(workout)
         if (deepFetch) {
             deepFetch(workout, workoutResponseDto)
         }
@@ -150,9 +150,9 @@ class WorkoutService @Autowired constructor(
         workoutResponseDto.sections = sectionResponseDtoMutableList
 
         val sectionDrillsGroupedBySectionId = sectionDrills.groupBy { it.sectionId!! }
-        val drillsMappedById = drills.map { it.id!! to it }.toMap()
+        val drillsMappedById = drills.associateBy { it.id!! }
         for (section in sections) {
-            val sectionResponseDto = SectionResponseDto(section, null)
+            val sectionResponseDto = sectionTransformer.convertSectionToSectionResponseDto(section, null)
             sectionResponseDtoMutableList.add(sectionResponseDto)
             val sectionDrillsForCurrentSection = sectionDrillsGroupedBySectionId[section.id]
             if (sectionDrillsForCurrentSection != null && sectionDrillsForCurrentSection.isNotEmpty()) {
@@ -161,7 +161,7 @@ class WorkoutService @Autowired constructor(
                 for (sectionDrill in sectionDrillsForCurrentSection) {
                     val drill = drillsMappedById[sectionDrill.drillId!!]
                     if (drill != null) {
-                        val drillResponseDto = DrillResponseDto(drill)
+                        val drillResponseDto = drillTransformer.convertDrillToDrillResponseDto(drill)
                         drillResponseDtoMutableList.add(drillResponseDto)
                         drillResponseDto.uuid = sectionDrill.uuid?.toString()
                         drillResponseDto.length = sectionDrill.length

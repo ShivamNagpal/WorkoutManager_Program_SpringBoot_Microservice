@@ -2,11 +2,13 @@ package com.nagpal.shivam.workout_manager.dtos.transformers
 
 import com.nagpal.shivam.workout_manager.dtos.request.DrillDeepSaveRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionDrillRequestDto
+import com.nagpal.shivam.workout_manager.dtos.response.SectionDrillResponseDto
 import com.nagpal.shivam.workout_manager.enums.DrillLengthUnits
 import com.nagpal.shivam.workout_manager.models.Drill
 import com.nagpal.shivam.workout_manager.models.Section
 import com.nagpal.shivam.workout_manager.models.SectionDrill
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class SectionDrillTransformer {
@@ -41,5 +43,20 @@ class SectionDrillTransformer {
             units = DrillLengthUnits.valueOf(drillDeepSaveRequestDto.units!!.toUpperCase())
             description = drillDeepSaveRequestDto.description
         }
+    }
+
+    fun convertSectionDrillToSectionDrillResponseDto(
+        sectionDrill: SectionDrill,
+        sectionUuid: UUID?,
+        drillUUID: UUID?
+    ): SectionDrillResponseDto {
+        return SectionDrillResponseDto(
+            sectionDrill.uuid.toString(),
+            sectionUuid?.toString(),
+            drillUUID?.toString(),
+            sectionDrill.length,
+            sectionDrill.units.toString(),
+            sectionDrill.description,
+        )
     }
 }
