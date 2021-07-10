@@ -5,7 +5,7 @@ import com.nagpal.shivam.workout_manager.dtos.request.SectionRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.dtos.response.SectionDrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
-import com.nagpal.shivam.workout_manager.services.impl.SectionService
+import com.nagpal.shivam.workout_manager.services.ISectionService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,7 +17,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/section")
 class SectionController @Autowired constructor(
-    private val sectionService: SectionService
+    private val sectionService: ISectionService
 ) {
 
     @PostMapping

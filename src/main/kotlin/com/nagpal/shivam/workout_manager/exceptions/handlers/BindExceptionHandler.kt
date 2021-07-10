@@ -16,9 +16,7 @@ class BindExceptionHandler {
         servletRequest: HttpServletRequest,
         exception: BindException
     ): ResponseEntity<ResponseWrapper<Any>> {
-        val errors = exception.bindingResult.allErrors
-            .map { (it as FieldError).field to it.defaultMessage }
-            .toMap()
+        val errors = exception.bindingResult.allErrors.associate { (it as FieldError).field to it.defaultMessage }
         return ResponseEntity.badRequest()
             .body(ResponseWrapper(errors, ErrorMessages.ERROR_VALIDATING_THE_FIELDS, false))
     }

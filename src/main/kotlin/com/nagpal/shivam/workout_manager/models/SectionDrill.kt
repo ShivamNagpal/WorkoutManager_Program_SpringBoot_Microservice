@@ -4,7 +4,7 @@ import com.nagpal.shivam.workout_manager.enums.DrillLengthUnits
 import javax.persistence.*
 
 @Entity
-class SectionDrill() : BaseModel() {
+class SectionDrill : BaseModel() {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
     var section: Section? = null

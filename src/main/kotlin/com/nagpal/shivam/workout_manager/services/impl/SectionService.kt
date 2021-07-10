@@ -37,7 +37,7 @@ class SectionService @Autowired constructor(
         val maxCount = sectionRepository.fetchMaxCount(workout.id!!).orElse(0)
         section.order = maxCount + 1
         section = sectionRepository.save(section)
-        return SectionResponseDto(section, workout.uuid)
+        return sectionTransformer.convertSectionToSectionResponseDto(section, workout.uuid)
     }
 
     override fun linkWorkout(sectionDrillRequestDto: SectionDrillRequestDto): SectionDrillResponseDto {
@@ -62,6 +62,10 @@ class SectionService @Autowired constructor(
         val maxCount = sectionDrillRepository.fetchMaxCount(section.id!!).orElse(0)
         sectionDrill.order = maxCount + 1
         sectionDrill = sectionDrillRepository.save(sectionDrill)
-        return SectionDrillResponseDto(sectionDrill, section.uuid, drill.uuid)
+        return sectionDrillTransformer.convertSectionDrillToSectionDrillResponseDto(
+            sectionDrill,
+            section.uuid,
+            drill.uuid
+        )
     }
 }

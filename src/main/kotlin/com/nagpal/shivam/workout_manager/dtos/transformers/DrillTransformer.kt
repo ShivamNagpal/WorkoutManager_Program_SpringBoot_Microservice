@@ -2,6 +2,7 @@ package com.nagpal.shivam.workout_manager.dtos.transformers
 
 import com.nagpal.shivam.workout_manager.dtos.request.DrillDeepSaveRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.DrillRequestDto
+import com.nagpal.shivam.workout_manager.dtos.response.DrillResponseDto
 import com.nagpal.shivam.workout_manager.models.Drill
 import org.springframework.stereotype.Component
 
@@ -20,5 +21,12 @@ class DrillTransformer {
         return drill.apply {
             name = drillDeepSaveRequestDto.name
         }
+    }
+
+    fun convertDrillToDrillResponseDto(drill: Drill): DrillResponseDto {
+        return DrillResponseDto(
+            drill.uuid.toString(),
+            drill.name,
+        )
     }
 }

@@ -16,6 +16,6 @@ class DrillService @Autowired constructor(
     override fun saveDrill(drillRequestDto: DrillRequestDto): DrillResponseDto {
         var drill = drillTransformer.convertDrillRequestDtoToDrill(drillRequestDto)
         drill = drillRepository.save(drill)
-        return DrillResponseDto(drill)
+        return drillTransformer.convertDrillToDrillResponseDto(drill)
     }
 }
