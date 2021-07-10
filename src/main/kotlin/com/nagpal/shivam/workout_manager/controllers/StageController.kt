@@ -1,0 +1,25 @@
+package com.nagpal.shivam.workout_manager.controllers
+
+import com.nagpal.shivam.workout_manager.dtos.request.StageRequestDto
+import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
+import com.nagpal.shivam.workout_manager.dtos.response.StageResponseDto
+import com.nagpal.shivam.workout_manager.services.IStageService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
+
+@RestController
+@RequestMapping("/stage")
+class StageController @Autowired constructor(
+    private val stageService: IStageService
+) {
+    @PostMapping
+    fun saveStage(@RequestBody @Valid stageRequestDto: StageRequestDto): ResponseEntity<ResponseWrapper<StageResponseDto>> {
+        val stageResponseDto: StageResponseDto = stageService.saveStage(stageRequestDto)
+        return ResponseEntity.ok(ResponseWrapper(stageResponseDto))
+    }
+}
