@@ -27,4 +27,13 @@ class ProgramController @Autowired constructor(
         val programResponseDto = programService.getProgramById(id)
         return ResponseEntity.ok(ResponseWrapper(programResponseDto))
     }
+
+    @GetMapping
+    fun getProgram(
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("pageSize", defaultValue = "20") pageSize: Int
+    ): ResponseEntity<ResponseWrapper<List<ProgramResponseDto>>> {
+        val programRequestDtos = programService.getPrograms(page, pageSize)
+        return ResponseEntity.ok(ResponseWrapper(programRequestDtos))
+    }
 }

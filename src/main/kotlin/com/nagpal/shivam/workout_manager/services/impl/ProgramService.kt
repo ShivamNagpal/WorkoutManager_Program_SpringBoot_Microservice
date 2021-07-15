@@ -8,6 +8,7 @@ import com.nagpal.shivam.workout_manager.repositories.ProgramRepository
 import com.nagpal.shivam.workout_manager.services.IProgramService
 import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.util.*
@@ -36,5 +37,11 @@ class ProgramService @Autowired constructor(
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
         }
         return programTransformer.convertProgramToProgramResponseDto(programOptional.get())
+    }
+
+    override fun getPrograms(page: Int, pageSize: Int): List<ProgramResponseDto> {
+        val pageRequest: PageRequest = PageRequest.of(page, pageSize)
+        val programs = programRepository.findAll(pageRequest)
+        return programs.map { programTransformer.convertProgramToProgramResponseDto(it) }
     }
 }
