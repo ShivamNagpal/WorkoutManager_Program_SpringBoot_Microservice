@@ -32,7 +32,7 @@ class ProgramService @Autowired constructor(
     }
 
     override fun getProgramById(id: String): ProgramResponseDto {
-        val programOptional = programRepository.findByUuid(UUID.fromString(id))
+        val programOptional = programRepository.findByUuidAndDeleted(UUID.fromString(id))
         if (programOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
         }
@@ -41,7 +41,7 @@ class ProgramService @Autowired constructor(
 
     override fun getPrograms(page: Int, pageSize: Int): List<ProgramResponseDto> {
         val pageRequest: PageRequest = PageRequest.of(page, pageSize)
-        val programs = programRepository.findAll(pageRequest)
+        val programs = programRepository.findAllByDeleted(pageRequest)
         return programs.map { programTransformer.convertProgramToProgramResponseDto(it) }
     }
 }

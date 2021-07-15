@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface ProgramRepository : CrudRepository<Program, Long> {
-    fun findByUuid(uuid: UUID): Optional<Program>
-    fun findAll(pageable: Pageable): List<Program>
+    fun findByUuidAndDeleted(uuid: UUID, deleted: Boolean = false): Optional<Program>
+    fun findAllByDeleted(pageable: Pageable, deleted: Boolean = false): List<Program>
 }

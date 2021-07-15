@@ -28,7 +28,7 @@ class StageService @Autowired constructor(
     private val stageWorkoutRepository: StageWorkoutRepository,
 ) : IStageService {
     override fun saveStage(stageRequestDto: StageRequestDto): StageResponseDto {
-        val programOptional = programRepository.findByUuid(UUID.fromString(stageRequestDto.programId))
+        val programOptional = programRepository.findByUuidAndDeleted(UUID.fromString(stageRequestDto.programId))
         if (programOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
         }
