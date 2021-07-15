@@ -8,4 +8,5 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 interface IProgramService {
     fun saveProgram(programRequestDto: ProgramRequestDto): ProgramResponseDto
+    fun getProgramById(id: String): ProgramResponseDto
 }

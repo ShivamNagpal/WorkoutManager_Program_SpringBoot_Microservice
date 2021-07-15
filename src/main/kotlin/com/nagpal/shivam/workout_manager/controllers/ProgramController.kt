@@ -6,10 +6,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.services.IProgramService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
@@ -22,6 +19,12 @@ class ProgramController @Autowired constructor(
         @RequestBody @Valid programRequestDto: ProgramRequestDto
     ): ResponseEntity<ResponseWrapper<ProgramResponseDto>> {
         val programResponseDto = programService.saveProgram(programRequestDto)
+        return ResponseEntity.ok(ResponseWrapper(programResponseDto))
+    }
+
+    @GetMapping("/{id}")
+    fun getProgramById(@PathVariable id: String): ResponseEntity<ResponseWrapper<ProgramResponseDto>> {
+        val programResponseDto = programService.getProgramById(id)
         return ResponseEntity.ok(ResponseWrapper(programResponseDto))
     }
 }

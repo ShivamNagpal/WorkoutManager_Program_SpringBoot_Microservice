@@ -10,6 +10,7 @@ import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ProgramService @Autowired constructor(
@@ -27,5 +28,13 @@ class ProgramService @Autowired constructor(
         }
         program = programRepository.save(program)
         return programTransformer.convertProgramToProgramResponseDto(program)
+    }
+
+    override fun getProgramById(id: String): ProgramResponseDto {
+        val programOptional = programRepository.findByUuid(UUID.fromString(id))
+        if (programOptional.isEmpty) {
+            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
+        }
+        return programTransformer.convertProgramToProgramResponseDto(programOptional.get())
     }
 }
