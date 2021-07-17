@@ -8,5 +8,5 @@ import com.nagpal.shivam.workout_manager.dtos.response.StageWorkoutResponseDto
 interface IStageService {
     fun saveStage(stageRequestDto: StageRequestDto): StageResponseDto
     fun linkWorkout(stageWorkoutRequestDto: StageWorkoutRequestDto): StageWorkoutResponseDto
-    fun getStageById(id: String): StageResponseDto
+    fun getStageById(id: Long): StageResponseDto
 }

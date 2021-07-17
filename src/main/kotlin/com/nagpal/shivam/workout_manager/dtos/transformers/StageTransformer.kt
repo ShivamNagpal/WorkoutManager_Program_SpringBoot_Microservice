@@ -19,10 +19,10 @@ class StageTransformer {
         }
     }
 
-    fun convertStageToStageResponseDto(stage: Stage, programUUID: UUID?): StageResponseDto {
+    fun convertStageToStageResponseDto(stage: Stage): StageResponseDto {
         return StageResponseDto(
-            stage.uuid?.toString(),
-            programUUID?.toString(),
+            stage.id,
+            stage.programId,
             stage.name,
             stage.description
         )
