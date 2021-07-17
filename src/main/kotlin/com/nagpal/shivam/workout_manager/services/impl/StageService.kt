@@ -41,7 +41,7 @@ class StageService @Autowired constructor(
     }
 
     override fun linkWorkout(stageWorkoutRequestDto: StageWorkoutRequestDto): StageWorkoutResponseDto {
-        val stageOptional = stageRepository.findByUuid(UUID.fromString(stageWorkoutRequestDto.stageId))
+        val stageOptional = stageRepository.findByUuidAndDeleted(UUID.fromString(stageWorkoutRequestDto.stageId))
         if (stageOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
         }
@@ -61,5 +61,20 @@ class StageService @Autowired constructor(
             stage.uuid,
             workout.uuid
         )
+    }
+
+    override fun getStageById(id: String): StageResponseDto {
+        val stageOptional = stageRepository.findByUuidAndDeleted(UUID.fromString(id))
+        if (stageOptional.isEmpty) {
+            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
+        }
+        val stage = stageOptional.get()
+        val programOptional = programRepository.findByIdAndDeleted(stage.programId!!)
+        // If the Program related to stage has been deleted, still show the user that the stage doesn't exists
+        if (programOptional.isEmpty) {
+            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
+        }
+        val program = programOptional.get()
+        return stageTransformer.convertStageToStageResponseDto(stage, program.uuid)
     }
 }

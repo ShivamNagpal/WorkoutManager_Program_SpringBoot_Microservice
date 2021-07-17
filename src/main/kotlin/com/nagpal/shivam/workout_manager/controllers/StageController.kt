@@ -8,10 +8,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.StageWorkoutResponseDto
 import com.nagpal.shivam.workout_manager.services.IStageService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
@@ -31,5 +28,11 @@ class StageController @Autowired constructor(
     ): ResponseEntity<ResponseWrapper<StageWorkoutResponseDto>> {
         val stageWorkoutResponseDto = stageService.linkWorkout(stageWorkoutRequestDto)
         return ResponseEntity.ok(ResponseWrapper(stageWorkoutResponseDto))
+    }
+
+    @GetMapping("/{id}")
+    fun getStageById(@PathVariable id: String): ResponseEntity<ResponseWrapper<StageResponseDto>> {
+        val stageResponseDto = stageService.getStageById(id)
+        return ResponseEntity.ok(ResponseWrapper(stageResponseDto))
     }
 }
