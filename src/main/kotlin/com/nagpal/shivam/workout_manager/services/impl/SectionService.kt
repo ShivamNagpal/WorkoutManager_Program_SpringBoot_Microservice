@@ -28,7 +28,7 @@ class SectionService @Autowired constructor(
     private val sectionDrillTransformer: SectionDrillTransformer,
 ) : ISectionService {
     override fun saveSection(sectionRequestDto: SectionRequestDto): SectionResponseDto {
-        val workoutOptional = workoutRepository.findByUuid(UUID.fromString(sectionRequestDto.workoutId))
+        val workoutOptional = workoutRepository.findByIdAndDeleted(sectionRequestDto.workoutId!!)
         if (workoutOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS)
         }

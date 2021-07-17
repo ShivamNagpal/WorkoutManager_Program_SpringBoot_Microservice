@@ -3,7 +3,7 @@ package com.nagpal.shivam.workout_manager.dtos.response
 import com.fasterxml.jackson.annotation.JsonInclude
 
 data class WorkoutResponseDto(
-    val uuid: String?,
+    val id: Long?,
     val name: String?,
     val level: String?,
     val description: String?,

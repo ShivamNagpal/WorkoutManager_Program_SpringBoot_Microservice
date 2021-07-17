@@ -21,7 +21,7 @@ class WorkoutTransformer {
 
     fun convertWorkoutToWorkoutResponseDto(workout: Workout): WorkoutResponseDto {
         return WorkoutResponseDto(
-            workout.uuid.toString(),
+            workout.id,
             workout.name,
             workout.level.toString(),
             workout.description,
