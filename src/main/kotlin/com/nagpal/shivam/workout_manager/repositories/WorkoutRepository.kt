@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface WorkoutRepository : CrudRepository<Workout, Long> {
-    fun findByUuid(uuid: UUID): Optional<Workout>
+    fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Workout>
     fun findAll(pageable: Pageable): Page<Workout>
 }

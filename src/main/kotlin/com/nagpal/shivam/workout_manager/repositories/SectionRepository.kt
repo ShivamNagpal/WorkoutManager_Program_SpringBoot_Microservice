@@ -8,7 +8,7 @@ import java.util.*
 interface SectionRepository : CrudRepository<Section, Long> {
     @Query(value = "select max(s.order) from Section s where s.workout.id = :workoutId")
     fun fetchMaxCount(workoutId: Long): Optional<Int>
-    fun findByUuid(uuid: UUID): Optional<Section>
+    fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Section>
 
     @Query(value = "select s from Section s where s.workout.id = :workoutId order by s.order")
     fun findByWorkoutId(workoutId: Long): List<Section>

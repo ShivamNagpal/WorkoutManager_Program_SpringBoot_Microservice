@@ -16,7 +16,6 @@ import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class SectionService @Autowired constructor(
@@ -28,7 +27,7 @@ class SectionService @Autowired constructor(
     private val sectionDrillTransformer: SectionDrillTransformer,
 ) : ISectionService {
     override fun saveSection(sectionRequestDto: SectionRequestDto): SectionResponseDto {
-        val workoutOptional = workoutRepository.findByUuid(UUID.fromString(sectionRequestDto.workoutId))
+        val workoutOptional = workoutRepository.findByIdAndDeleted(sectionRequestDto.workoutId!!)
         if (workoutOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS)
         }
@@ -37,15 +36,15 @@ class SectionService @Autowired constructor(
         val maxCount = sectionRepository.fetchMaxCount(workout.id!!).orElse(0)
         section.order = maxCount + 1
         section = sectionRepository.save(section)
-        return sectionTransformer.convertSectionToSectionResponseDto(section, workout.uuid)
+        return sectionTransformer.convertSectionToSectionResponseDto(section)
     }
 
     override fun linkWorkout(sectionDrillRequestDto: SectionDrillRequestDto): SectionDrillResponseDto {
-        val sectionOptional = sectionRepository.findByUuid(UUID.fromString(sectionDrillRequestDto.sectionId))
+        val sectionOptional = sectionRepository.findByIdAndDeleted(sectionDrillRequestDto.sectionId!!)
         if (sectionOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.SECTION_UUID_DOES_NOT_EXISTS)
         }
-        val drillOptional = drillRepository.findByUuid(UUID.fromString(sectionDrillRequestDto.drillId))
+        val drillOptional = drillRepository.findByIdAndDeleted(sectionDrillRequestDto.drillId!!)
         if (drillOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.DRILL_UUID_DOES_NOT_EXISTS)
         }
@@ -63,9 +62,7 @@ class SectionService @Autowired constructor(
         sectionDrill.order = maxCount + 1
         sectionDrill = sectionDrillRepository.save(sectionDrill)
         return sectionDrillTransformer.convertSectionDrillToSectionDrillResponseDto(
-            sectionDrill,
-            section.uuid,
-            drill.uuid
+            sectionDrill
         )
     }
 }

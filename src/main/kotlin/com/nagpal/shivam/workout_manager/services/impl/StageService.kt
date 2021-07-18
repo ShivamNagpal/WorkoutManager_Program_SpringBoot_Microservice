@@ -16,7 +16,6 @@ import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class StageService @Autowired constructor(
@@ -28,7 +27,7 @@ class StageService @Autowired constructor(
     private val stageWorkoutRepository: StageWorkoutRepository,
 ) : IStageService {
     override fun saveStage(stageRequestDto: StageRequestDto): StageResponseDto {
-        val programOptional = programRepository.findByUuidAndDeleted(UUID.fromString(stageRequestDto.programId))
+        val programOptional = programRepository.findByIdAndDeleted(stageRequestDto.programId!!)
         if (programOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
         }
@@ -37,15 +36,15 @@ class StageService @Autowired constructor(
         val maxCount = stageRepository.fetchMaxCount(stage.programId!!).orElse(0)
         stage.order = maxCount + 1
         stage = stageRepository.save(stage)
-        return stageTransformer.convertStageToStageResponseDto(stage, program.uuid)
+        return stageTransformer.convertStageToStageResponseDto(stage)
     }
 
     override fun linkWorkout(stageWorkoutRequestDto: StageWorkoutRequestDto): StageWorkoutResponseDto {
-        val stageOptional = stageRepository.findByUuidAndDeleted(UUID.fromString(stageWorkoutRequestDto.stageId))
+        val stageOptional = stageRepository.findByIdAndDeleted(stageWorkoutRequestDto.stageId!!)
         if (stageOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
         }
-        val workoutOptional = workoutRepository.findByUuid(UUID.fromString(stageWorkoutRequestDto.workoutId))
+        val workoutOptional = workoutRepository.findByIdAndDeleted(stageWorkoutRequestDto.workoutId!!)
         if (workoutOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS)
         }
@@ -56,15 +55,11 @@ class StageService @Autowired constructor(
         val maxCount = stageWorkoutRepository.fetchMaxCount(stage.id!!).orElse(0)
         stageWorkout.order = maxCount + 1
         stageWorkout = stageWorkoutRepository.save(stageWorkout)
-        return stageWorkoutTransformer.convertStageWorkoutToStageWorkoutResponseDto(
-            stageWorkout,
-            stage.uuid,
-            workout.uuid
-        )
+        return stageWorkoutTransformer.convertStageWorkoutToStageWorkoutResponseDto(stageWorkout)
     }
 
-    override fun getStageById(id: String): StageResponseDto {
-        val stageOptional = stageRepository.findByUuidAndDeleted(UUID.fromString(id))
+    override fun getStageById(id: Long): StageResponseDto {
+        val stageOptional = stageRepository.findById(id)
         if (stageOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
         }
@@ -74,7 +69,6 @@ class StageService @Autowired constructor(
         if (programOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
         }
-        val program = programOptional.get()
-        return stageTransformer.convertStageToStageResponseDto(stage, program.uuid)
+        return stageTransformer.convertStageToStageResponseDto(stage)
     }
 }

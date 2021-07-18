@@ -21,7 +21,7 @@ class ProgramTransformer {
 
     fun convertProgramToProgramResponseDto(program: Program): ProgramResponseDto {
         return ProgramResponseDto(
-            program.uuid.toString(),
+            program.id,
             program.name,
             program.level.toString(),
             program.description,

@@ -8,7 +8,6 @@ import com.nagpal.shivam.workout_manager.models.Drill
 import com.nagpal.shivam.workout_manager.models.Section
 import com.nagpal.shivam.workout_manager.models.SectionDrill
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class SectionDrillTransformer {
@@ -46,14 +45,12 @@ class SectionDrillTransformer {
     }
 
     fun convertSectionDrillToSectionDrillResponseDto(
-        sectionDrill: SectionDrill,
-        sectionUuid: UUID?,
-        drillUUID: UUID?
+        sectionDrill: SectionDrill
     ): SectionDrillResponseDto {
         return SectionDrillResponseDto(
-            sectionDrill.uuid.toString(),
-            sectionUuid?.toString(),
-            drillUUID?.toString(),
+            sectionDrill.id,
+            sectionDrill.sectionId,
+            sectionDrill.drillId,
             sectionDrill.length,
             sectionDrill.units.toString(),
             sectionDrill.description,

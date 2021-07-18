@@ -5,11 +5,11 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 data class SectionDrillRequestDto(
-    @field:NotBlank
-    val sectionId: String? = null,
+    @field:NotNull
+    val sectionId: Long? = null,
 
-    @field:NotBlank
-    val drillId: String? = null,
+    @field:NotNull
+    val drillId: Long? = null,
 
     @field:NotNull
     @field:Min(value = 1)

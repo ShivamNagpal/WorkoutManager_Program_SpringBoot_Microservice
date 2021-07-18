@@ -1,7 +1,7 @@
 package com.nagpal.shivam.workout_manager.dtos.response
 
 data class ProgramResponseDto(
-    val uuid: String?,
+    val id: Long?,
     val name: String?,
     val level: String?,
     val description: String?,

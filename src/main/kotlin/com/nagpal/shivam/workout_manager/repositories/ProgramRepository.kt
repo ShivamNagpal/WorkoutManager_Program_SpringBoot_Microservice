@@ -7,6 +7,5 @@ import java.util.*
 
 interface ProgramRepository : CrudRepository<Program, Long> {
     fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Program>
-    fun findByUuidAndDeleted(uuid: UUID, deleted: Boolean = false): Optional<Program>
     fun findAllByDeleted(pageable: Pageable, deleted: Boolean = false): List<Program>
 }

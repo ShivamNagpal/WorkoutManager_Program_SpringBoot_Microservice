@@ -5,7 +5,6 @@ import com.nagpal.shivam.workout_manager.dtos.response.StageResponseDto
 import com.nagpal.shivam.workout_manager.models.Program
 import com.nagpal.shivam.workout_manager.models.Stage
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class StageTransformer {
@@ -19,10 +18,10 @@ class StageTransformer {
         }
     }
 
-    fun convertStageToStageResponseDto(stage: Stage, programUUID: UUID?): StageResponseDto {
+    fun convertStageToStageResponseDto(stage: Stage): StageResponseDto {
         return StageResponseDto(
-            stage.uuid?.toString(),
-            programUUID?.toString(),
+            stage.id,
+            stage.programId,
             stage.name,
             stage.description
         )

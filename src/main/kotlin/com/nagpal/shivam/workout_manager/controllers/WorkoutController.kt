@@ -33,12 +33,12 @@ class WorkoutController @Autowired constructor(
         return ResponseEntity.ok(ResponseWrapper(workouts))
     }
 
-    @GetMapping("/{uuidString}")
-    fun getWorkoutByUuid(
-        @PathVariable uuidString: String,
+    @GetMapping("/{id}")
+    fun getWorkoutById(
+        @PathVariable id: Long,
         @RequestParam(name = "deepFetch", defaultValue = "false") deepFetch: Boolean
     ): ResponseEntity<ResponseWrapper<WorkoutResponseDto>> {
-        val workoutResponseDto = workoutService.getWorkoutByUuid(uuidString, deepFetch)
+        val workoutResponseDto = workoutService.getWorkoutById(id, deepFetch)
         return ResponseEntity.ok(ResponseWrapper(workoutResponseDto))
     }
 }

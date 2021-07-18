@@ -25,7 +25,7 @@ class DrillTransformer {
 
     fun convertDrillToDrillResponseDto(drill: Drill): DrillResponseDto {
         return DrillResponseDto(
-            drill.uuid.toString(),
+            drill.id,
             drill.name,
         )
     }

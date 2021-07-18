@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ProgramService @Autowired constructor(
@@ -31,8 +30,8 @@ class ProgramService @Autowired constructor(
         return programTransformer.convertProgramToProgramResponseDto(program)
     }
 
-    override fun getProgramById(id: String): ProgramResponseDto {
-        val programOptional = programRepository.findByUuidAndDeleted(UUID.fromString(id))
+    override fun getProgramById(id: Long): ProgramResponseDto {
+        val programOptional = programRepository.findByIdAndDeleted(id)
         if (programOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
         }

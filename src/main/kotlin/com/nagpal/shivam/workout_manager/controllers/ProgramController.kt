@@ -23,7 +23,7 @@ class ProgramController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
-    fun getProgramById(@PathVariable id: String): ResponseEntity<ResponseWrapper<ProgramResponseDto>> {
+    fun getProgramById(@PathVariable id: Long): ResponseEntity<ResponseWrapper<ProgramResponseDto>> {
         val programResponseDto = programService.getProgramById(id)
         return ResponseEntity.ok(ResponseWrapper(programResponseDto))
     }

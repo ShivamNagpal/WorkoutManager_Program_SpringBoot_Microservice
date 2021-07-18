@@ -31,7 +31,7 @@ class StageController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
-    fun getStageById(@PathVariable id: String): ResponseEntity<ResponseWrapper<StageResponseDto>> {
+    fun getStageById(@PathVariable id: Long): ResponseEntity<ResponseWrapper<StageResponseDto>> {
         val stageResponseDto = stageService.getStageById(id)
         return ResponseEntity.ok(ResponseWrapper(stageResponseDto))
     }

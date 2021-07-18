@@ -6,8 +6,8 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 data class SectionRequestDto(
-    @field:NotBlank
-    val workoutId: String?,
+    @field:NotNull
+    val workoutId: Long?,
 
     @field:NotBlank
     val name: String?,

@@ -6,7 +6,6 @@ import com.nagpal.shivam.workout_manager.models.Stage
 import com.nagpal.shivam.workout_manager.models.StageWorkout
 import com.nagpal.shivam.workout_manager.models.Workout
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class StageWorkoutTransformer {
@@ -25,14 +24,12 @@ class StageWorkoutTransformer {
     }
 
     fun convertStageWorkoutToStageWorkoutResponseDto(
-        stageWorkout: StageWorkout,
-        stageUuid: UUID?,
-        workoutUuid: UUID?
+        stageWorkout: StageWorkout
     ): StageWorkoutResponseDto {
         return StageWorkoutResponseDto(
-            stageWorkout.uuid?.toString(),
-            stageUuid?.toString(),
-            workoutUuid?.toString(),
+            stageWorkout.id,
+            stageWorkout.stageId,
+            stageWorkout.workoutId,
             stageWorkout.order
         )
     }

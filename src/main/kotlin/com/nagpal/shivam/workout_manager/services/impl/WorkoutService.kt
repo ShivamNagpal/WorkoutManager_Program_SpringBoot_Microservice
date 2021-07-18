@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class WorkoutService @Autowired constructor(
@@ -110,9 +109,8 @@ class WorkoutService @Autowired constructor(
         return workoutPage.content.map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
     }
 
-    override fun getWorkoutByUuid(uuidString: String, deepFetch: Boolean): WorkoutResponseDto {
-        val workoutUuid = UUID.fromString(uuidString)
-        val workout = workoutRepository.findByUuid(workoutUuid)
+    override fun getWorkoutById(id: Long, deepFetch: Boolean): WorkoutResponseDto {
+        val workout = workoutRepository.findByIdAndDeleted(id)
             .orElseThrow {
                 return@orElseThrow ResponseException(
                     HttpStatus.BAD_REQUEST,
@@ -152,7 +150,7 @@ class WorkoutService @Autowired constructor(
         val sectionDrillsGroupedBySectionId = sectionDrills.groupBy { it.sectionId!! }
         val drillsMappedById = drills.associateBy { it.id!! }
         for (section in sections) {
-            val sectionResponseDto = sectionTransformer.convertSectionToSectionResponseDto(section, null)
+            val sectionResponseDto = sectionTransformer.convertSectionToSectionResponseDto(section)
             sectionResponseDtoMutableList.add(sectionResponseDto)
             val sectionDrillsForCurrentSection = sectionDrillsGroupedBySectionId[section.id]
             if (sectionDrillsForCurrentSection != null && sectionDrillsForCurrentSection.isNotEmpty()) {
@@ -163,7 +161,7 @@ class WorkoutService @Autowired constructor(
                     if (drill != null) {
                         val drillResponseDto = drillTransformer.convertDrillToDrillResponseDto(drill)
                         drillResponseDtoMutableList.add(drillResponseDto)
-                        drillResponseDto.uuid = sectionDrill.uuid?.toString()
+                        drillResponseDto.id = sectionDrill.id
                         drillResponseDto.length = sectionDrill.length
                         drillResponseDto.units = sectionDrill.units!!.toString()
                         drillResponseDto.order = sectionDrill.order
