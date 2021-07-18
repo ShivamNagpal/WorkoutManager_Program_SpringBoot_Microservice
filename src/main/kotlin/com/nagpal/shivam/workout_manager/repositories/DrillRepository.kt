@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository
 import java.util.*
 
 interface DrillRepository : CrudRepository<Drill, Long> {
-    fun findByUuid(uuid: UUID): Optional<Drill>
+    fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Drill>
 
     @Query(value = "select d from Drill d where d.name in (:names)")
     fun findByNames(names: Iterable<String>): List<Drill>

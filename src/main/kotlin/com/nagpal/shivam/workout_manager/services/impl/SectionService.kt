@@ -16,7 +16,6 @@ import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class SectionService @Autowired constructor(
@@ -45,7 +44,7 @@ class SectionService @Autowired constructor(
         if (sectionOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.SECTION_UUID_DOES_NOT_EXISTS)
         }
-        val drillOptional = drillRepository.findByUuid(UUID.fromString(sectionDrillRequestDto.drillId))
+        val drillOptional = drillRepository.findByIdAndDeleted(sectionDrillRequestDto.drillId!!)
         if (drillOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.DRILL_UUID_DOES_NOT_EXISTS)
         }
@@ -63,8 +62,7 @@ class SectionService @Autowired constructor(
         sectionDrill.order = maxCount + 1
         sectionDrill = sectionDrillRepository.save(sectionDrill)
         return sectionDrillTransformer.convertSectionDrillToSectionDrillResponseDto(
-            sectionDrill,
-            drill.uuid
+            sectionDrill
         )
     }
 }

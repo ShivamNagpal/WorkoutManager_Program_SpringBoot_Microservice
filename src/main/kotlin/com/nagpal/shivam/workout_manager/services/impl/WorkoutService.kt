@@ -161,7 +161,7 @@ class WorkoutService @Autowired constructor(
                     if (drill != null) {
                         val drillResponseDto = drillTransformer.convertDrillToDrillResponseDto(drill)
                         drillResponseDtoMutableList.add(drillResponseDto)
-                        drillResponseDto.uuid = sectionDrill.uuid?.toString()
+                        drillResponseDto.id = sectionDrill.id
                         drillResponseDto.length = sectionDrill.length
                         drillResponseDto.units = sectionDrill.units!!.toString()
                         drillResponseDto.order = sectionDrill.order

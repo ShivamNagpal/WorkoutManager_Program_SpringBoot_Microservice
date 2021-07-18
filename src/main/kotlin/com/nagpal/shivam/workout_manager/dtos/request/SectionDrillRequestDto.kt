@@ -8,8 +8,8 @@ data class SectionDrillRequestDto(
     @field:NotNull
     val sectionId: Long? = null,
 
-    @field:NotBlank
-    val drillId: String? = null,
+    @field:NotNull
+    val drillId: Long? = null,
 
     @field:NotNull
     @field:Min(value = 1)
