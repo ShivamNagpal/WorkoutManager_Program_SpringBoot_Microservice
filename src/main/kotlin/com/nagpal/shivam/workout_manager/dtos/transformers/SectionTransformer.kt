@@ -6,7 +6,6 @@ import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
 import com.nagpal.shivam.workout_manager.models.Section
 import com.nagpal.shivam.workout_manager.models.Workout
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class SectionTransformer {
@@ -36,10 +35,10 @@ class SectionTransformer {
         }
     }
 
-    fun convertSectionToSectionResponseDto(section: Section, workoutUuid: UUID?): SectionResponseDto {
+    fun convertSectionToSectionResponseDto(section: Section): SectionResponseDto {
         return SectionResponseDto(
-            section.uuid.toString(),
-            workoutUuid?.toString(),
+            section.id,
+            section.workoutId,
             section.name,
             section.repetitions,
             section.restingInfo,

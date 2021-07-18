@@ -37,11 +37,11 @@ class SectionService @Autowired constructor(
         val maxCount = sectionRepository.fetchMaxCount(workout.id!!).orElse(0)
         section.order = maxCount + 1
         section = sectionRepository.save(section)
-        return sectionTransformer.convertSectionToSectionResponseDto(section, workout.uuid)
+        return sectionTransformer.convertSectionToSectionResponseDto(section)
     }
 
     override fun linkWorkout(sectionDrillRequestDto: SectionDrillRequestDto): SectionDrillResponseDto {
-        val sectionOptional = sectionRepository.findByUuid(UUID.fromString(sectionDrillRequestDto.sectionId))
+        val sectionOptional = sectionRepository.findByIdAndDeleted(sectionDrillRequestDto.sectionId!!)
         if (sectionOptional.isEmpty) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.SECTION_UUID_DOES_NOT_EXISTS)
         }
@@ -64,7 +64,6 @@ class SectionService @Autowired constructor(
         sectionDrill = sectionDrillRepository.save(sectionDrill)
         return sectionDrillTransformer.convertSectionDrillToSectionDrillResponseDto(
             sectionDrill,
-            section.uuid,
             drill.uuid
         )
     }

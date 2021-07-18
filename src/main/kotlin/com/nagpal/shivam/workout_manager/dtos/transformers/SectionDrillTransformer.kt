@@ -47,12 +47,11 @@ class SectionDrillTransformer {
 
     fun convertSectionDrillToSectionDrillResponseDto(
         sectionDrill: SectionDrill,
-        sectionUuid: UUID?,
         drillUUID: UUID?
     ): SectionDrillResponseDto {
         return SectionDrillResponseDto(
             sectionDrill.uuid.toString(),
-            sectionUuid?.toString(),
+            sectionDrill.sectionId,
             drillUUID?.toString(),
             sectionDrill.length,
             sectionDrill.units.toString(),

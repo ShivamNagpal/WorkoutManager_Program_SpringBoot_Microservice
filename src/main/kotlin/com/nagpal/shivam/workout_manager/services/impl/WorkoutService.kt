@@ -150,7 +150,7 @@ class WorkoutService @Autowired constructor(
         val sectionDrillsGroupedBySectionId = sectionDrills.groupBy { it.sectionId!! }
         val drillsMappedById = drills.associateBy { it.id!! }
         for (section in sections) {
-            val sectionResponseDto = sectionTransformer.convertSectionToSectionResponseDto(section, null)
+            val sectionResponseDto = sectionTransformer.convertSectionToSectionResponseDto(section)
             sectionResponseDtoMutableList.add(sectionResponseDto)
             val sectionDrillsForCurrentSection = sectionDrillsGroupedBySectionId[section.id]
             if (sectionDrillsForCurrentSection != null && sectionDrillsForCurrentSection.isNotEmpty()) {
