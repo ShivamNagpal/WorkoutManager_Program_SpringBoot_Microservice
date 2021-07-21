@@ -78,4 +78,9 @@ class StageService @Autowired constructor(
         val stages = stageRepository.findAllByDeleted(pageRequest)
         return stages.map { stageTransformer.convertStageToStageResponseDto(it) }
     }
+
+    override fun getStagesInProgram(programId: Long): List<StageResponseDto> {
+        val stages = stageRepository.findAllByProgramIdAndDeleted(programId)
+        return stages.map { stageTransformer.convertStageToStageResponseDto(it) }
+    }
 }

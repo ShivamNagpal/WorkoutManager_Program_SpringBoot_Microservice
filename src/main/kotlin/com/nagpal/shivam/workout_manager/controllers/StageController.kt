@@ -45,4 +45,12 @@ class StageController @Autowired constructor(
         val stageResponseDto = stageService.getStageById(id)
         return ResponseEntity.ok(ResponseWrapper(stageResponseDto))
     }
+
+    @GetMapping("/program/{programId}")
+    fun getStagesInProgram(
+        @PathVariable("programId") programId: Long
+    ): ResponseEntity<ResponseWrapper<List<StageResponseDto>>> {
+        val stages = stageService.getStagesInProgram(programId)
+        return ResponseEntity.ok(ResponseWrapper(stages))
+    }
 }
