@@ -9,4 +9,5 @@ interface IWorkoutService {
     fun saveWorkout(workoutRequestDto: WorkoutRequestDto, deepSave: Boolean): WorkoutResponseDto
     fun getWorkouts(page: Int, pageSize: Int): List<WorkoutResponseDto>
     fun getWorkoutById(id: Long, deepFetch: Boolean): WorkoutResponseDto
+    fun getWorkoutsInStage(stageId: Long): List<WorkoutResponseDto>
 }

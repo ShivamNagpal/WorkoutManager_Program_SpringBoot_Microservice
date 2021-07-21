@@ -9,4 +9,5 @@ import java.util.*
 interface WorkoutRepository : CrudRepository<Workout, Long> {
     fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Workout>
     fun findAll(pageable: Pageable): Page<Workout>
+    fun findAllByIdIn(ids: List<Long>): List<Workout>
 }

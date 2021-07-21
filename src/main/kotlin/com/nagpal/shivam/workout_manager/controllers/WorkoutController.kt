@@ -42,4 +42,10 @@ class WorkoutController @Autowired constructor(
         val workoutResponseDto = workoutService.getWorkoutById(id, deepFetch)
         return ResponseEntity.ok(ResponseWrapper(workoutResponseDto))
     }
+
+    @GetMapping("/stage/{stageId}")
+    fun getWorkoutsInStage(@PathVariable("stageId") stageId: Long): ResponseEntity<ResponseWrapper<List<WorkoutResponseDto>>> {
+        val workoutsInStage = workoutService.getWorkoutsInStage(stageId)
+        return ResponseEntity.ok(ResponseWrapper(workoutsInStage))
+    }
 }
