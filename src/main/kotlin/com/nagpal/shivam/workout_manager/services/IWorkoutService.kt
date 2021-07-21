@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 interface IWorkoutService {
     fun saveWorkout(workoutRequestDto: WorkoutRequestDto, deepSave: Boolean): WorkoutResponseDto
-    fun getWorkouts(page: Int, size: Int): List<WorkoutResponseDto>
+    fun getWorkouts(page: Int, pageSize: Int): List<WorkoutResponseDto>
     fun getWorkoutById(id: Long, deepFetch: Boolean): WorkoutResponseDto
 }

@@ -9,4 +9,5 @@ interface IStageService {
     fun saveStage(stageRequestDto: StageRequestDto): StageResponseDto
     fun linkWorkout(stageWorkoutRequestDto: StageWorkoutRequestDto): StageWorkoutResponseDto
     fun getStageById(id: Long): StageResponseDto
+    fun getStages(page: Int, size: Int): List<StageResponseDto>
 }

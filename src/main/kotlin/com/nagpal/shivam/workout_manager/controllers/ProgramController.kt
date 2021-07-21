@@ -4,6 +4,7 @@ import com.nagpal.shivam.workout_manager.dtos.request.ProgramRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.ProgramResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.services.IProgramService
+import com.nagpal.shivam.workout_manager.utils.Constants
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -30,8 +31,8 @@ class ProgramController @Autowired constructor(
 
     @GetMapping
     fun getProgram(
-        @RequestParam("page", defaultValue = "0") page: Int,
-        @RequestParam("pageSize", defaultValue = "20") pageSize: Int
+        @RequestParam(name = Constants.PAGE, defaultValue = Constants.PAGE_DEFAULT_VALUE) page: Int,
+        @RequestParam(name = Constants.PAGE_SIZE, defaultValue = Constants.PAGE_SIZE_DEFAULT_VALUE) pageSize: Int
     ): ResponseEntity<ResponseWrapper<List<ProgramResponseDto>>> {
         val programRequestDtos = programService.getPrograms(page, pageSize)
         return ResponseEntity.ok(ResponseWrapper(programRequestDtos))

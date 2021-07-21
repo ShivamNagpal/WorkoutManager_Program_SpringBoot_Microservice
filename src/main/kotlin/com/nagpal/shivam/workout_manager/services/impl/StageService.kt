@@ -14,6 +14,7 @@ import com.nagpal.shivam.workout_manager.repositories.WorkoutRepository
 import com.nagpal.shivam.workout_manager.services.IStageService
 import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
@@ -70,5 +71,11 @@ class StageService @Autowired constructor(
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.STAGE_UUID_DOES_NOT_EXISTS)
         }
         return stageTransformer.convertStageToStageResponseDto(stage)
+    }
+
+    override fun getStages(page: Int, size: Int): List<StageResponseDto> {
+        val pageRequest = PageRequest.of(page, size)
+        val stages = stageRepository.findAllByDeleted(pageRequest)
+        return stages.map { stageTransformer.convertStageToStageResponseDto(it) }
     }
 }
