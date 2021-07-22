@@ -8,5 +8,4 @@ import java.util.*
 interface StageWorkoutRepository : CrudRepository<StageWorkout, Long> {
     @Query(value = "select max(sw.order) from StageWorkout sw where sw.stage.id = :stageId")
     fun fetchMaxCount(stageId: Long): Optional<Int>
-    fun findAllByStageIdAndDeleted(stageId: Long, deleted: Boolean = false): List<StageWorkout>
 }

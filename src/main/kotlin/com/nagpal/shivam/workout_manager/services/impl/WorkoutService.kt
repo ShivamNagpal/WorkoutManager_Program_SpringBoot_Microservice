@@ -124,9 +124,7 @@ class WorkoutService @Autowired constructor(
     }
 
     override fun getWorkoutsInStage(stageId: Long): List<WorkoutResponseDto> {
-        val stageWorkouts = stageWorkoutRepository.findAllByStageIdAndDeleted(stageId)
-        val workoutIds = stageWorkouts.map { it.workoutId!! }
-        val workouts = workoutRepository.findAllByIdIn(workoutIds)
+        val workouts = workoutRepository.findAllInAStage(stageId)
         return workouts.map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
     }
 
