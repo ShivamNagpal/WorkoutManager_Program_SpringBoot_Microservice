@@ -103,8 +103,8 @@ class WorkoutService @Autowired constructor(
         deepFetch(workoutResponseDto, sectionList, sectionDrillList, drillList)
     }
 
-    override fun getWorkouts(page: Int, size: Int): List<WorkoutResponseDto> {
-        val pageRequest = PageRequest.of(page, size)
+    override fun getWorkouts(page: Int, pageSize: Int): List<WorkoutResponseDto> {
+        val pageRequest = PageRequest.of(page, pageSize)
         val workoutPage = workoutRepository.findAll(pageRequest)
         return workoutPage.content.map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
     }
@@ -123,6 +123,11 @@ class WorkoutService @Autowired constructor(
             deepFetch(workout, workoutResponseDto)
         }
         return workoutResponseDto
+    }
+
+    override fun getWorkoutsInStage(stageId: Long): List<WorkoutResponseDto> {
+        val workouts = workoutRepository.findAllInAStage(stageId)
+        return workouts.map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
     }
 
     fun deepFetch(workout: Workout, workoutResponseDto: WorkoutResponseDto) {

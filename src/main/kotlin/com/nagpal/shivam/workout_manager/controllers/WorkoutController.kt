@@ -4,6 +4,7 @@ import com.nagpal.shivam.workout_manager.dtos.request.WorkoutRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.dtos.response.WorkoutResponseDto
 import com.nagpal.shivam.workout_manager.services.IWorkoutService
+import com.nagpal.shivam.workout_manager.utils.Constants
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -26,10 +27,10 @@ class WorkoutController @Autowired constructor(
 
     @GetMapping
     fun getWorkouts(
-        @RequestParam(name = "page", defaultValue = "0") page: Int,
-        @RequestParam(name = "size", defaultValue = "10") size: Int
+        @RequestParam(name = Constants.PAGE, defaultValue = Constants.PAGE_DEFAULT_VALUE) page: Int,
+        @RequestParam(name = Constants.PAGE_SIZE, defaultValue = Constants.PAGE_SIZE_DEFAULT_VALUE) pageSize: Int
     ): ResponseEntity<ResponseWrapper<List<WorkoutResponseDto>>> {
-        val workouts = workoutService.getWorkouts(page, size)
+        val workouts = workoutService.getWorkouts(page, pageSize)
         return ResponseEntity.ok(ResponseWrapper(workouts))
     }
 
@@ -40,5 +41,11 @@ class WorkoutController @Autowired constructor(
     ): ResponseEntity<ResponseWrapper<WorkoutResponseDto>> {
         val workoutResponseDto = workoutService.getWorkoutById(id, deepFetch)
         return ResponseEntity.ok(ResponseWrapper(workoutResponseDto))
+    }
+
+    @GetMapping("/stage/{stageId}")
+    fun getWorkoutsInStage(@PathVariable("stageId") stageId: Long): ResponseEntity<ResponseWrapper<List<WorkoutResponseDto>>> {
+        val workoutsInStage = workoutService.getWorkoutsInStage(stageId)
+        return ResponseEntity.ok(ResponseWrapper(workoutsInStage))
     }
 }
