@@ -13,7 +13,10 @@ import com.nagpal.shivam.workout_manager.models.Drill
 import com.nagpal.shivam.workout_manager.models.Section
 import com.nagpal.shivam.workout_manager.models.SectionDrill
 import com.nagpal.shivam.workout_manager.models.Workout
-import com.nagpal.shivam.workout_manager.repositories.*
+import com.nagpal.shivam.workout_manager.repositories.DrillRepository
+import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
+import com.nagpal.shivam.workout_manager.repositories.SectionRepository
+import com.nagpal.shivam.workout_manager.repositories.WorkoutRepository
 import com.nagpal.shivam.workout_manager.services.IWorkoutService
 import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,7 +30,6 @@ class WorkoutService @Autowired constructor(
     private val sectionRepository: SectionRepository,
     private val sectionDrillRepository: SectionDrillRepository,
     private val drillRepository: DrillRepository,
-    private val stageWorkoutRepository: StageWorkoutRepository,
     private val drillTransformer: DrillTransformer,
     private val workoutTransformer: WorkoutTransformer,
     private val sectionTransformer: SectionTransformer,
