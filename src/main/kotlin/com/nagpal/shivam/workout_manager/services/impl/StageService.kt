@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.services.impl
 
+import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.StageRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.StageWorkoutRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.StageResponseDto
@@ -7,6 +8,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.StageWorkoutResponseDto
 import com.nagpal.shivam.workout_manager.dtos.transformers.StageTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.StageWorkoutTransformer
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
+import com.nagpal.shivam.workout_manager.helpers.impl.ReorderHelper
 import com.nagpal.shivam.workout_manager.repositories.ProgramRepository
 import com.nagpal.shivam.workout_manager.repositories.StageRepository
 import com.nagpal.shivam.workout_manager.repositories.StageWorkoutRepository
@@ -26,6 +28,7 @@ class StageService @Autowired constructor(
     private val workoutRepository: WorkoutRepository,
     private val stageWorkoutTransformer: StageWorkoutTransformer,
     private val stageWorkoutRepository: StageWorkoutRepository,
+    private val reorderHelper: ReorderHelper,
 ) : IStageService {
     override fun saveStage(stageRequestDto: StageRequestDto): StageResponseDto {
         val programOptional = programRepository.findByIdAndDeleted(stageRequestDto.programId!!)
@@ -82,5 +85,12 @@ class StageService @Autowired constructor(
     override fun getStagesInProgram(programId: Long): List<StageResponseDto> {
         val stages = stageRepository.findAllByProgramIdAndDeleted(programId)
         return stages.map { stageTransformer.convertStageToStageResponseDto(it) }
+    }
+
+    override fun reorderStages(programId: Long, reorderRequestDto: ReorderRequestDto): List<StageResponseDto> {
+        val stages = stageRepository.findAllByProgramIdAndDeleted(programId)
+        reorderHelper.reorderItems(reorderRequestDto, stages)
+        val savedStages = stageRepository.saveAll(stages)
+        return savedStages.map { stageTransformer.convertStageToStageResponseDto(it) }
     }
 }

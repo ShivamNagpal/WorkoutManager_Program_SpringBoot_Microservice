@@ -3,7 +3,7 @@ package com.nagpal.shivam.workout_manager.models
 import javax.persistence.*
 
 @Entity
-class StageWorkout : BaseModel() {
+class StageWorkout : OrderedBaseModel() {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stage_id")
     var stage: Stage? = null
@@ -17,7 +17,4 @@ class StageWorkout : BaseModel() {
 
     @Column(name = "workout_id", insertable = false, updatable = false)
     var workoutId: Long? = null
-
-    @Column(name = "\"order\"")
-    var order: Int? = null
 }
