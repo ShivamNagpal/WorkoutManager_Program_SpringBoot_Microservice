@@ -91,6 +91,6 @@ class StageService @Autowired constructor(
         val stages = stageRepository.findAllByProgramIdAndDeleted(programId)
         reorderHelper.reorderItems(reorderRequestDto, stages)
         val savedStages = stageRepository.saveAll(stages)
-        return savedStages.map { stageTransformer.convertStageToStageResponseDto(it) }
+        return savedStages.sortedBy { it.order }.map { stageTransformer.convertStageToStageResponseDto(it) }
     }
 }

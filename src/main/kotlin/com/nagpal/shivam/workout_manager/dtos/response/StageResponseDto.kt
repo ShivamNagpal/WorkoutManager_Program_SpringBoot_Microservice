@@ -5,4 +5,5 @@ data class StageResponseDto(
     val programId: Long?,
     val name: String?,
     val description: String?,
+    val order: Int?,
 )
