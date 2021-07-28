@@ -11,4 +11,5 @@ interface SectionDrillRepository : CrudRepository<SectionDrill, Long> {
 
     @Query(value = "select sd from SectionDrill sd where sd.section.id in (:sectionIds) order by sd.order")
     fun findBySectionIds(sectionIds: List<Long>): List<SectionDrill>
+    fun findAllBySectionIdAndDeleted(sectionId: Long, deleted: Boolean = false): List<SectionDrill>
 }

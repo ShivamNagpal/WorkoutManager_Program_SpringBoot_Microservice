@@ -1,15 +1,13 @@
 package com.nagpal.shivam.workout_manager.controllers
 
 import com.nagpal.shivam.workout_manager.dtos.request.DrillRequestDto
+import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.DrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.services.IDrillService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
@@ -22,5 +20,14 @@ class DrillController @Autowired constructor(
     fun saveDrill(@RequestBody @Valid drillRequestDto: DrillRequestDto): ResponseEntity<ResponseWrapper<DrillResponseDto>> {
         val drillResponseDto = drillService.saveDrill(drillRequestDto)
         return ResponseEntity.ok(ResponseWrapper(drillResponseDto))
+    }
+
+    @PostMapping("/reorder/{sectionId}")
+    fun reorderDrills(
+        @PathVariable("sectionId") sectionId: Long,
+        @RequestBody @Valid reorderRequestDto: ReorderRequestDto
+    ): ResponseEntity<ResponseWrapper<List<DrillResponseDto>>> {
+        val drills = drillService.reorderDrills(sectionId, reorderRequestDto)
+        return ResponseEntity.ok(ResponseWrapper(drills))
     }
 }
