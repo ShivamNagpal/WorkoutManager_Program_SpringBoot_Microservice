@@ -4,7 +4,7 @@ import com.nagpal.shivam.workout_manager.enums.DrillLengthUnits
 import javax.persistence.*
 
 @Entity
-class SectionDrill : BaseModel() {
+class SectionDrill : OrderedBaseModel() {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "section_id")
     var section: Section? = null
@@ -24,9 +24,6 @@ class SectionDrill : BaseModel() {
     var units: DrillLengthUnits? = null
 
     var description: String? = null
-
-    @Column(name = "\"order\"")
-    var order: Int? = null
 
     fun copyForeignKeyIdsToTheFields() {
         this.sectionId = this.section!!.id

@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.controllers
 
+import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.StageRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.StageWorkoutRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
@@ -51,6 +52,15 @@ class StageController @Autowired constructor(
         @PathVariable("programId") programId: Long
     ): ResponseEntity<ResponseWrapper<List<StageResponseDto>>> {
         val stages = stageService.getStagesInProgram(programId)
+        return ResponseEntity.ok(ResponseWrapper(stages))
+    }
+
+    @PostMapping("/reorder/{programId}")
+    fun reorderStages(
+        @PathVariable("programId") programId: Long,
+        @RequestBody @Valid reorderRequestDto: ReorderRequestDto
+    ): ResponseEntity<ResponseWrapper<List<StageResponseDto>>> {
+        val stages = stageService.reorderStages(programId, reorderRequestDto)
         return ResponseEntity.ok(ResponseWrapper(stages))
     }
 }

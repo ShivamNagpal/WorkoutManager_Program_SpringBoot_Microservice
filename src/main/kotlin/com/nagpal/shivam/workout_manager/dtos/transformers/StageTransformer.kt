@@ -23,7 +23,8 @@ class StageTransformer {
             stage.id,
             stage.programId,
             stage.name,
-            stage.description
+            stage.description,
+            stage.order
         )
     }
 }

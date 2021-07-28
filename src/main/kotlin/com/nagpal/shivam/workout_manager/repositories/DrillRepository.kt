@@ -10,4 +10,11 @@ interface DrillRepository : CrudRepository<Drill, Long> {
 
     @Query(value = "select d from Drill d where d.name in (:names)")
     fun findByNames(names: Iterable<String>): List<Drill>
+
+    @Query(
+        "select d from Drill d, SectionDrill sd " +
+                "where sd.drillId = d.id and sd.sectionId = :sectionId and " +
+                "sd.deleted = false and d.deleted = false order by sd.order"
+    )
+    fun findAllInASection(sectionId: Long): List<Drill>
 }

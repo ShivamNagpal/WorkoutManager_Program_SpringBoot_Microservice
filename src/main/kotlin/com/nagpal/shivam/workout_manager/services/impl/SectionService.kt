@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.services.impl
 
+import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionDrillRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.SectionRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionDrillResponseDto
@@ -7,6 +8,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionDrillTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionTransformer
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
+import com.nagpal.shivam.workout_manager.helpers.impl.ReorderHelper
 import com.nagpal.shivam.workout_manager.repositories.DrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionRepository
@@ -25,6 +27,7 @@ class SectionService @Autowired constructor(
     private val sectionDrillRepository: SectionDrillRepository,
     private val sectionTransformer: SectionTransformer,
     private val sectionDrillTransformer: SectionDrillTransformer,
+    private val reorderHelper: ReorderHelper,
 ) : ISectionService {
     override fun saveSection(sectionRequestDto: SectionRequestDto): SectionResponseDto {
         val workoutOptional = workoutRepository.findByIdAndDeleted(sectionRequestDto.workoutId!!)
@@ -64,5 +67,14 @@ class SectionService @Autowired constructor(
         return sectionDrillTransformer.convertSectionDrillToSectionDrillResponseDto(
             sectionDrill
         )
+    }
+
+    override fun reorderSections(workoutId: Long, reorderRequestDto: ReorderRequestDto): List<SectionResponseDto> {
+        val sections = sectionRepository.findByWorkoutId(workoutId)
+        reorderHelper.reorderItems(reorderRequestDto, sections) {
+            return@reorderItems it.id!!
+        }
+        sectionRepository.saveAll(sections)
+        return sections.sortedBy { it.order }.map { sectionTransformer.convertSectionToSectionResponseDto(it) }
     }
 }
