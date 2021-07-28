@@ -11,15 +11,19 @@ import org.springframework.stereotype.Component
 @Component
 class ReorderHelper : IReorderHelper {
 
-    override fun <T : OrderedBaseModel> reorderItems(reorderRequestDto: ReorderRequestDto, dbItems: List<T>) {
+    override fun <T : OrderedBaseModel> reorderItems(
+        reorderRequestDto: ReorderRequestDto,
+        dbItems: List<T>,
+        idSelector: (T) -> Long
+    ) {
         val itemsIdsHashSet = HashSet(reorderRequestDto.items)
-        val itemsMappedById = dbItems.associateBy { it.id!! }
+        val itemsMappedById = dbItems.associateBy { idSelector(it) }
         val dbItemsIdsSet = itemsMappedById.keys
         if (dbItemsIdsSet.size != itemsIdsHashSet.size) {
             throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.REORDER_ENTRIES_COUNT_MISMATCH)
         }
-        itemsIdsHashSet.forEach {
-            if (!dbItemsIdsSet.contains(it)) {
+        dbItemsIdsSet.forEach {
+            if (!itemsIdsHashSet.contains(it)) {
                 throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.REORDER_ENTRIES_VALUE_MISMATCH)
             }
         }

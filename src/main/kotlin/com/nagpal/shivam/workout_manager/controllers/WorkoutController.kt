@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.controllers
 
+import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.WorkoutRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.dtos.response.WorkoutResponseDto
@@ -47,5 +48,14 @@ class WorkoutController @Autowired constructor(
     fun getWorkoutsInStage(@PathVariable("stageId") stageId: Long): ResponseEntity<ResponseWrapper<List<WorkoutResponseDto>>> {
         val workoutsInStage = workoutService.getWorkoutsInStage(stageId)
         return ResponseEntity.ok(ResponseWrapper(workoutsInStage))
+    }
+
+    @PostMapping("/reorder/{stageId}")
+    fun reorderWorkouts(
+        @PathVariable("stageId") stageId: Long,
+        @RequestBody @Valid reorderRequestDto: ReorderRequestDto
+    ): ResponseEntity<ResponseWrapper<List<WorkoutResponseDto>>> {
+        val workouts = workoutService.reorderWorkouts(stageId, reorderRequestDto)
+        return ResponseEntity.ok(ResponseWrapper(workouts))
     }
 }

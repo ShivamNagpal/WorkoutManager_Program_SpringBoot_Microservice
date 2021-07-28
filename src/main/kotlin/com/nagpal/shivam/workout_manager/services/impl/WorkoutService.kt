@@ -1,5 +1,6 @@
 package com.nagpal.shivam.workout_manager.services.impl
 
+import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
 import com.nagpal.shivam.workout_manager.dtos.request.WorkoutRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.DrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
@@ -9,14 +10,12 @@ import com.nagpal.shivam.workout_manager.dtos.transformers.SectionDrillTransform
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.WorkoutTransformer
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
+import com.nagpal.shivam.workout_manager.helpers.impl.ReorderHelper
 import com.nagpal.shivam.workout_manager.models.Drill
 import com.nagpal.shivam.workout_manager.models.Section
 import com.nagpal.shivam.workout_manager.models.SectionDrill
 import com.nagpal.shivam.workout_manager.models.Workout
-import com.nagpal.shivam.workout_manager.repositories.DrillRepository
-import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
-import com.nagpal.shivam.workout_manager.repositories.SectionRepository
-import com.nagpal.shivam.workout_manager.repositories.WorkoutRepository
+import com.nagpal.shivam.workout_manager.repositories.*
 import com.nagpal.shivam.workout_manager.services.IWorkoutService
 import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,6 +33,8 @@ class WorkoutService @Autowired constructor(
     private val workoutTransformer: WorkoutTransformer,
     private val sectionTransformer: SectionTransformer,
     private val sectionDrillTransformer: SectionDrillTransformer,
+    private val stageWorkoutRepository: StageWorkoutRepository,
+    private val reorderHelper: ReorderHelper,
 ) : IWorkoutService {
     override fun saveWorkout(workoutRequestDto: WorkoutRequestDto, deepSave: Boolean): WorkoutResponseDto {
         var workout = try {
@@ -128,6 +129,16 @@ class WorkoutService @Autowired constructor(
     override fun getWorkoutsInStage(stageId: Long): List<WorkoutResponseDto> {
         val workouts = workoutRepository.findAllInAStage(stageId)
         return workouts.map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
+    }
+
+    override fun reorderWorkouts(stageId: Long, reorderRequestDto: ReorderRequestDto): List<WorkoutResponseDto> {
+        val stageWorkouts = stageWorkoutRepository.findAllByStageIdAndDeleted(stageId)
+        reorderHelper.reorderItems(reorderRequestDto, stageWorkouts) {
+            return@reorderItems it.workoutId!!
+        }
+        stageWorkoutRepository.saveAll(stageWorkouts)
+        return workoutRepository.findAllInAStage(stageId)
+            .map { workoutTransformer.convertWorkoutToWorkoutResponseDto(it) }
     }
 
     fun deepFetch(workout: Workout, workoutResponseDto: WorkoutResponseDto) {
