@@ -12,8 +12,8 @@ interface SectionRepository : CrudRepository<Section, Long> {
 
     @Query(
         value = "select s from Section s " +
-                "where s.workout.id = :workoutId and s.deleted = false " +
-                "order by s.order"
+            "where s.workout.id = :workoutId and s.deleted = false " +
+            "order by s.order"
     )
     fun findByWorkoutId(workoutId: Long): List<Section>
 }

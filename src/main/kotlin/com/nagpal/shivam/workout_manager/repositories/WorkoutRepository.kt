@@ -13,8 +13,8 @@ interface WorkoutRepository : CrudRepository<Workout, Long> {
 
     @Query(
         "select w from Workout w, StageWorkout sw " +
-                "where sw.workoutId = w.id and sw.stageId = :stageId and " +
-                "sw.deleted = false and w.deleted = false order by sw.order"
+            "where sw.workoutId = w.id and sw.stageId = :stageId and " +
+            "sw.deleted = false and w.deleted = false order by sw.order"
     )
     fun findAllInAStage(stageId: Long): List<Workout>
 }

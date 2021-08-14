@@ -13,8 +13,8 @@ interface DrillRepository : CrudRepository<Drill, Long> {
 
     @Query(
         "select d from Drill d, SectionDrill sd " +
-                "where sd.drillId = d.id and sd.sectionId = :sectionId and " +
-                "sd.deleted = false and d.deleted = false order by sd.order"
+            "where sd.drillId = d.id and sd.sectionId = :sectionId and " +
+            "sd.deleted = false and d.deleted = false order by sd.order"
     )
     fun findAllInASection(sectionId: Long): List<Drill>
 }
