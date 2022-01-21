@@ -1,6 +1,10 @@
 package com.nagpal.shivam.workout_manager.utils
 
 object ErrorMessages {
+    const val AUTHORIZATION_HEADER_MUST_BE_PRESENT = "Authorization header must be present"
+    const val ACCESS_DENIED = "Access Denied"
+    const val INVALID_JWT: String = "Invalid JWT"
+    const val TOKEN_MUST_START_WITH_BEARER_SCHEME: String = "Token must start with the 'Bearer' scheme"
     const val STAGE_UUID_DOES_NOT_EXISTS: String = "Stage UUID doesn't exists"
     const val PROGRAM_UUID_NOT_FOUND: String = "Program UUID doesn't exists"
     const val ERROR_VALIDATING_THE_FIELDS: String = "Error while validating the request body"
