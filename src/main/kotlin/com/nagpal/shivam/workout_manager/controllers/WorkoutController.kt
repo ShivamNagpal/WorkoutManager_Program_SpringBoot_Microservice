@@ -8,6 +8,7 @@ import com.nagpal.shivam.workout_manager.services.IWorkoutService
 import com.nagpal.shivam.workout_manager.utils.Constants
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -36,6 +37,7 @@ class WorkoutController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     fun getWorkoutById(
         @PathVariable id: Long,
         @RequestParam(name = "deepFetch", defaultValue = "false") deepFetch: Boolean

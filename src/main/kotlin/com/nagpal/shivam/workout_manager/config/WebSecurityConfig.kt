@@ -2,6 +2,7 @@ package com.nagpal.shivam.workout_manager.config
 
 import com.nagpal.shivam.workout_manager.filters.JwtFilter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -9,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig @Autowired constructor(
     private val jwtFilter: JwtFilter,
     private val jwtAuthenticationHandler: JwtAuthenticationHandler

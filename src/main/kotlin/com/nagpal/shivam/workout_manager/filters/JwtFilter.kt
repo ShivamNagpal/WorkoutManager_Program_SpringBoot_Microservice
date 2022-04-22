@@ -29,7 +29,7 @@ class JwtFilter @Autowired constructor(private val jwtHelper: JwtHelper) : OnceP
                 val tokenPayload: TokenPayload = jwtHelper.verifyAndDecode(authorizationHeader)
                 val user = User(
                     tokenPayload.userId.toString(), UUID.randomUUID().toString(),
-                    tokenPayload.roles.map { role: String? -> SimpleGrantedAuthority(role) }
+                    tokenPayload.roles.map { role: String -> SimpleGrantedAuthority("ROLE_$role") }
                 )
                 val usernamePasswordAuthenticationToken =
                     UsernamePasswordAuthenticationToken(user, null, user.authorities)
