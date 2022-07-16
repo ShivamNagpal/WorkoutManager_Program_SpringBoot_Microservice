@@ -20,10 +20,10 @@ enum class ResponseMessage(val messageCode: String, private val message: String)
     INVALID_DRILL_LENGTH_UNITS("E-014", "{0} is an invalid drill length unit"),
     ;
 
-    fun getMessage(vararg variables: String): String {
+    fun getMessage(vararg variables: Any): String {
         if (variables.isEmpty()) {
             return message
         }
-        return MessageFormat.format(message, variables)
+        return MessageFormat.format(message, *variables)
     }
 }
