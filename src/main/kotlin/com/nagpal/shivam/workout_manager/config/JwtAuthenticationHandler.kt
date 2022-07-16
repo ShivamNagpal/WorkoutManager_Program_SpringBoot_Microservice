@@ -2,10 +2,10 @@ package com.nagpal.shivam.workout_manager.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
+import com.nagpal.shivam.workout_manager.enums.ResponseMessage
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.helpers.impl.JwtHelper
 import com.nagpal.shivam.workout_manager.utils.Constants
-import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import io.netty.handler.codec.http.HttpResponseStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.AuthenticationException
@@ -28,10 +28,11 @@ class JwtAuthenticationHandler @Autowired constructor(private val jwtHelper: Jwt
         try {
             val authorizationHeader = request.getHeader(Constants.AUTHORIZATION)
             if (authorizationHeader == null) {
+                val responseMessage = ResponseMessage.AUTHORIZATION_HEADER_MUST_BE_PRESENT
                 writeResponse(
                     response,
                     HttpResponseStatus.BAD_REQUEST.code(),
-                    ResponseWrapper(null, ErrorMessages.AUTHORIZATION_HEADER_MUST_BE_PRESENT, false)
+                    ResponseWrapper(null, responseMessage.messageCode, responseMessage.getMessage(), false)
                 )
                 return
             }
@@ -40,12 +41,20 @@ class JwtAuthenticationHandler @Autowired constructor(private val jwtHelper: Jwt
             writeResponse(
                 response,
                 responseException.httpStatus.value(),
-                ResponseWrapper(responseException.payload, responseException.message, false)
+                ResponseWrapper(
+                    responseException.payload,
+                    responseException.messageCode,
+                    responseException.message,
+                    false
+                )
             )
             return
         }
+        val responseMessage = ResponseMessage.ACCESS_DENIED
         writeResponse(
-            response, HttpResponseStatus.FORBIDDEN.code(), ResponseWrapper(null, ErrorMessages.ACCESS_DENIED, false)
+            response,
+            HttpResponseStatus.FORBIDDEN.code(),
+            ResponseWrapper(null, responseMessage.messageCode, responseMessage.getMessage(), false)
         )
     }
 

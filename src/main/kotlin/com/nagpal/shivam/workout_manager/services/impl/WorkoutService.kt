@@ -9,6 +9,7 @@ import com.nagpal.shivam.workout_manager.dtos.transformers.DrillTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionDrillTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.WorkoutTransformer
+import com.nagpal.shivam.workout_manager.enums.ResponseMessage
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.helpers.impl.ReorderHelper
 import com.nagpal.shivam.workout_manager.models.Drill
@@ -17,7 +18,6 @@ import com.nagpal.shivam.workout_manager.models.SectionDrill
 import com.nagpal.shivam.workout_manager.models.Workout
 import com.nagpal.shivam.workout_manager.repositories.*
 import com.nagpal.shivam.workout_manager.services.IWorkoutService
-import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -40,9 +40,11 @@ class WorkoutService @Autowired constructor(
         var workout = try {
             workoutTransformer.convertWorkoutRequestDtoToWorkout(workoutRequestDto)
         } catch (e: IllegalArgumentException) {
+            val responseMessage = ResponseMessage.INVALID_WORKOUT_LEVEL
             throw ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.invalidWorkoutLevel(workoutRequestDto.level!!)
+                responseMessage.messageCode,
+                responseMessage.getMessage(workoutRequestDto.level!!)
             )
         }
         workout = workoutRepository.save(workout)
@@ -76,9 +78,11 @@ class WorkoutService @Autowired constructor(
                                 drill
                             )
                         } catch (e: IllegalArgumentException) {
+                            val responseMessage = ResponseMessage.INVALID_DRILL_LENGTH_UNITS
                             throw ResponseException(
                                 HttpStatus.BAD_REQUEST,
-                                ErrorMessages.invalidDrillLengthUnit(drillDeepSaveRequestDto.units!!)
+                                responseMessage.messageCode,
+                                responseMessage.getMessage(drillDeepSaveRequestDto.units!!)
                             )
                         }
                         sectionDrill.order = drillIndex + 1
@@ -113,9 +117,11 @@ class WorkoutService @Autowired constructor(
     override fun getWorkoutById(id: Long, deepFetch: Boolean): WorkoutResponseDto {
         val workout = workoutRepository.findByIdAndDeleted(id)
             .orElseThrow {
+                val responseMessage = ResponseMessage.WORKOUT_UUID_DOES_NOT_EXISTS
                 return@orElseThrow ResponseException(
                     HttpStatus.BAD_REQUEST,
-                    ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS
+                    responseMessage.messageCode,
+                    responseMessage.getMessage()
                 )
             }
 

@@ -14,6 +14,9 @@ class ResponseExceptionHandler {
         request: HttpServletRequest,
         exception: ResponseException
     ): ResponseEntity<ResponseWrapper<Any?>> {
-        return ResponseEntity(ResponseWrapper(exception.payload, exception.message, false), exception.httpStatus)
+        return ResponseEntity(
+            ResponseWrapper(exception.payload, exception.messageCode, exception.message, false),
+            exception.httpStatus
+        )
     }
 }
