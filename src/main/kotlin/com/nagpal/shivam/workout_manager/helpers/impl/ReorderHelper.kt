@@ -1,10 +1,10 @@
 package com.nagpal.shivam.workout_manager.helpers.impl
 
 import com.nagpal.shivam.workout_manager.dtos.request.ReorderRequestDto
+import com.nagpal.shivam.workout_manager.enums.ResponseMessage
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.helpers.IReorderHelper
 import com.nagpal.shivam.workout_manager.models.OrderedBaseModel
-import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 
@@ -20,11 +20,17 @@ class ReorderHelper : IReorderHelper {
         val itemsMappedById = dbItems.associateBy { idSelector(it) }
         val dbItemsIdsSet = itemsMappedById.keys
         if (dbItemsIdsSet.size != itemsIdsHashSet.size) {
-            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.REORDER_ENTRIES_COUNT_MISMATCH)
+            val responseMessage = ResponseMessage.REORDER_ENTRIES_COUNT_MISMATCH
+            throw ResponseException(HttpStatus.BAD_REQUEST, responseMessage.messageCode, responseMessage.getMessage())
         }
         dbItemsIdsSet.forEach {
             if (!itemsIdsHashSet.contains(it)) {
-                throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.REORDER_ENTRIES_VALUE_MISMATCH)
+                val responseMessage = ResponseMessage.REORDER_ENTRIES_VALUE_MISMATCH
+                throw ResponseException(
+                    HttpStatus.BAD_REQUEST,
+                    responseMessage.messageCode,
+                    responseMessage.getMessage()
+                )
             }
         }
 

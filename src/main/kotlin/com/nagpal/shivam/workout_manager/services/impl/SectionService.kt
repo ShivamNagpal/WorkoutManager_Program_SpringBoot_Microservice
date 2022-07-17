@@ -7,6 +7,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.SectionDrillResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.SectionResponseDto
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionDrillTransformer
 import com.nagpal.shivam.workout_manager.dtos.transformers.SectionTransformer
+import com.nagpal.shivam.workout_manager.enums.ResponseMessage
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.helpers.impl.ReorderHelper
 import com.nagpal.shivam.workout_manager.repositories.DrillRepository
@@ -14,7 +15,6 @@ import com.nagpal.shivam.workout_manager.repositories.SectionDrillRepository
 import com.nagpal.shivam.workout_manager.repositories.SectionRepository
 import com.nagpal.shivam.workout_manager.repositories.WorkoutRepository
 import com.nagpal.shivam.workout_manager.services.ISectionService
-import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -32,7 +32,8 @@ class SectionService @Autowired constructor(
     override fun saveSection(sectionRequestDto: SectionRequestDto): SectionResponseDto {
         val workoutOptional = workoutRepository.findByIdAndDeleted(sectionRequestDto.workoutId!!)
         if (workoutOptional.isEmpty) {
-            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.WORKOUT_UUID_DOES_NOT_EXISTS)
+            val responseMessage = ResponseMessage.WORKOUT_UUID_DOES_NOT_EXISTS
+            throw ResponseException(HttpStatus.BAD_REQUEST, responseMessage.messageCode, responseMessage.getMessage())
         }
         val workout = workoutOptional.get()
         var section = sectionTransformer.convertSectionRequestDtoToSection(sectionRequestDto, workout)
@@ -45,20 +46,24 @@ class SectionService @Autowired constructor(
     override fun linkWorkout(sectionDrillRequestDto: SectionDrillRequestDto): SectionDrillResponseDto {
         val sectionOptional = sectionRepository.findByIdAndDeleted(sectionDrillRequestDto.sectionId!!)
         if (sectionOptional.isEmpty) {
-            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.SECTION_UUID_DOES_NOT_EXISTS)
+            val responseMessage = ResponseMessage.SECTION_UUID_DOES_NOT_EXISTS
+            throw ResponseException(HttpStatus.BAD_REQUEST, responseMessage.messageCode, responseMessage.getMessage())
         }
         val drillOptional = drillRepository.findByIdAndDeleted(sectionDrillRequestDto.drillId!!)
         if (drillOptional.isEmpty) {
-            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.DRILL_UUID_DOES_NOT_EXISTS)
+            val responseMessage = ResponseMessage.DRILL_UUID_DOES_NOT_EXISTS
+            throw ResponseException(HttpStatus.BAD_REQUEST, responseMessage.messageCode, responseMessage.getMessage())
         }
         val section = sectionOptional.get()
         val drill = drillOptional.get()
         var sectionDrill = try {
             sectionDrillTransformer.convertSectionDrillRequestDtoToSection(sectionDrillRequestDto, section, drill)
         } catch (e: IllegalArgumentException) {
+            val responseMessage = ResponseMessage.INVALID_DRILL_LENGTH_UNITS
             throw  ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.invalidDrillLengthUnit(sectionDrillRequestDto.units!!)
+                responseMessage.messageCode,
+                responseMessage.getMessage(sectionDrillRequestDto.units!!)
             )
         }
         val maxCount = sectionDrillRepository.fetchMaxCount(section.id!!).orElse(0)

@@ -3,10 +3,10 @@ package com.nagpal.shivam.workout_manager.services.impl
 import com.nagpal.shivam.workout_manager.dtos.request.ProgramRequestDto
 import com.nagpal.shivam.workout_manager.dtos.response.ProgramResponseDto
 import com.nagpal.shivam.workout_manager.dtos.transformers.ProgramTransformer
+import com.nagpal.shivam.workout_manager.enums.ResponseMessage
 import com.nagpal.shivam.workout_manager.exceptions.ResponseException
 import com.nagpal.shivam.workout_manager.repositories.ProgramRepository
 import com.nagpal.shivam.workout_manager.services.IProgramService
-import com.nagpal.shivam.workout_manager.utils.ErrorMessages
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -21,9 +21,11 @@ class ProgramService @Autowired constructor(
         var program = try {
             programTransformer.convertProgramRequestDtoToProgram(programRequestDto)
         } catch (e: IllegalArgumentException) {
+            val responseMessage = ResponseMessage.INVALID_WORKOUT_LEVEL
             throw ResponseException(
                 HttpStatus.BAD_REQUEST,
-                ErrorMessages.invalidWorkoutLevel(programRequestDto.level!!)
+                responseMessage.messageCode,
+                responseMessage.getMessage(programRequestDto.level!!)
             )
         }
         program = programRepository.save(program)
@@ -33,7 +35,8 @@ class ProgramService @Autowired constructor(
     override fun getProgramById(id: Long): ProgramResponseDto {
         val programOptional = programRepository.findByIdAndDeleted(id)
         if (programOptional.isEmpty) {
-            throw ResponseException(HttpStatus.BAD_REQUEST, ErrorMessages.PROGRAM_UUID_NOT_FOUND)
+            val responseMessage = ResponseMessage.PROGRAM_UUID_NOT_FOUND
+            throw ResponseException(HttpStatus.BAD_REQUEST, responseMessage.messageCode, responseMessage.getMessage())
         }
         return programTransformer.convertProgramToProgramResponseDto(programOptional.get())
     }
