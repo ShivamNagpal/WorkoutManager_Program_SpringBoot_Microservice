@@ -1,8 +1,9 @@
 package com.nagpal.shivam.workout_manager.enums
 
+import com.nagpal.shivam.workout_manager.utils.Constants
 import java.text.MessageFormat
 
-enum class ResponseMessage(val messageCode: String, private val message: String) {
+enum class ResponseMessage(messageCode: String, private val message: String) {
     DUPLICATE_RESPONSE_CODES("E-000", "Duplicate response codes defined: {0}"),
     AUTHORIZATION_HEADER_MUST_BE_PRESENT("E-001", "Authorization header must be present"),
     ACCESS_DENIED("E-002", "Access Denied"),
@@ -19,6 +20,8 @@ enum class ResponseMessage(val messageCode: String, private val message: String)
     INVALID_WORKOUT_LEVEL("E-013", "{0} is an invalid workout level"),
     INVALID_DRILL_LENGTH_UNITS("E-014", "{0} is an invalid drill length unit"),
     ;
+
+    val messageCode: String = "${Constants.RESPONSE_MESSAGE_PREFIX}$messageCode"
 
     fun getMessage(vararg variables: Any): String {
         if (variables.isEmpty()) {

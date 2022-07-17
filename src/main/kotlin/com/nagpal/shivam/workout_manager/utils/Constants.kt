@@ -12,4 +12,5 @@ object Constants {
     const val BEARER = "Bearer "
     const val USER_ID = "userId"
     const val ROLES = "roles"
+    const val RESPONSE_MESSAGE_PREFIX = "WM-P-"
 }
