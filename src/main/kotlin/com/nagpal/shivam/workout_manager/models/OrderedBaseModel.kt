@@ -1,7 +1,7 @@
 package com.nagpal.shivam.workout_manager.models
 
-import javax.persistence.Column
-import javax.persistence.MappedSuperclass
+import jakarta.persistence.Column
+import jakarta.persistence.MappedSuperclass
 
 @MappedSuperclass
 class OrderedBaseModel : BaseModel() {

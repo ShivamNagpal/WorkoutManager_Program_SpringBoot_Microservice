@@ -1,6 +1,6 @@
 package com.nagpal.shivam.workout_manager.dtos.request
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 data class DrillRequestDto(
     @field:NotBlank

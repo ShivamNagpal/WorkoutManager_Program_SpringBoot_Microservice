@@ -3,6 +3,9 @@ package com.nagpal.shivam.workout_manager.filters
 import com.nagpal.shivam.workout_manager.dtos.jwt.TokenPayload
 import com.nagpal.shivam.workout_manager.helpers.impl.JwtHelper
 import com.nagpal.shivam.workout_manager.utils.Constants
+import jakarta.servlet.FilterChain
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -12,9 +15,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.util.*
-import javax.servlet.FilterChain
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 
 @Component

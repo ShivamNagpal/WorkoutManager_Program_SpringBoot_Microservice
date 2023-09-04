@@ -8,6 +8,7 @@ import com.nagpal.shivam.workout_manager.models.Drill
 import com.nagpal.shivam.workout_manager.models.Section
 import com.nagpal.shivam.workout_manager.models.SectionDrill
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class SectionDrillTransformer {
@@ -24,7 +25,7 @@ class SectionDrillTransformer {
             sectionId = section.id
             drillId = drill.id
             length = sectionDrillRequestDto.length
-            units = DrillLengthUnits.valueOf(sectionDrillRequestDto.units!!.toUpperCase())
+            units = DrillLengthUnits.valueOf(sectionDrillRequestDto.units!!.uppercase(Locale.getDefault()))
             description = sectionDrillRequestDto.description
         }
     }
@@ -39,7 +40,7 @@ class SectionDrillTransformer {
             this.section = section
             this.drill = drill
             length = drillDeepSaveRequestDto.length
-            units = DrillLengthUnits.valueOf(drillDeepSaveRequestDto.units!!.toUpperCase())
+            units = DrillLengthUnits.valueOf(drillDeepSaveRequestDto.units!!.uppercase(Locale.getDefault()))
             description = drillDeepSaveRequestDto.description
         }
     }

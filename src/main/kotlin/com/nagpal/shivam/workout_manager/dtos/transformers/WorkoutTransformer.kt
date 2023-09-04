@@ -5,6 +5,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.WorkoutResponseDto
 import com.nagpal.shivam.workout_manager.enums.WorkoutLevel
 import com.nagpal.shivam.workout_manager.models.Workout
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class WorkoutTransformer {
@@ -13,7 +14,7 @@ class WorkoutTransformer {
         val workout = Workout()
         return workout.apply {
             name = workoutRequestDto.name
-            level = WorkoutLevel.valueOf(workoutRequestDto.level!!.toUpperCase())
+            level = WorkoutLevel.valueOf(workoutRequestDto.level!!.uppercase(Locale.getDefault()))
             description = workoutRequestDto.description
             equipments = workoutRequestDto.equipments
         }

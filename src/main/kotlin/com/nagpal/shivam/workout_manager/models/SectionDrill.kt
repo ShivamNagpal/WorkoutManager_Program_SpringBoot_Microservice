@@ -1,7 +1,7 @@
 package com.nagpal.shivam.workout_manager.models
 
 import com.nagpal.shivam.workout_manager.enums.DrillLengthUnits
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 class SectionDrill : OrderedBaseModel() {
