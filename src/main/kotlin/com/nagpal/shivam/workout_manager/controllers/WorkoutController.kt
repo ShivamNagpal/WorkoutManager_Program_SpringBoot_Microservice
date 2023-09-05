@@ -6,10 +6,10 @@ import com.nagpal.shivam.workout_manager.dtos.response.ResponseWrapper
 import com.nagpal.shivam.workout_manager.dtos.response.WorkoutResponseDto
 import com.nagpal.shivam.workout_manager.services.IWorkoutService
 import com.nagpal.shivam.workout_manager.utils.Constants
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/workout")

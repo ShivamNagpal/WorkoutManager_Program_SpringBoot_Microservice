@@ -56,7 +56,7 @@ class SectionService @Autowired constructor(
         var sectionDrill = try {
             sectionDrillTransformer.convertSectionDrillRequestDtoToSection(sectionDrillRequestDto, section, drill)
         } catch (e: IllegalArgumentException) {
-            throw  ResponseException(
+            throw ResponseException(
                 HttpStatus.BAD_REQUEST,
                 ErrorMessages.invalidDrillLengthUnit(sectionDrillRequestDto.units!!)
             )

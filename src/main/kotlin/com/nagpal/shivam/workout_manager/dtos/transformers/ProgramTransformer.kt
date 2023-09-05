@@ -5,6 +5,7 @@ import com.nagpal.shivam.workout_manager.dtos.response.ProgramResponseDto
 import com.nagpal.shivam.workout_manager.enums.WorkoutLevel
 import com.nagpal.shivam.workout_manager.models.Program
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class ProgramTransformer {
@@ -12,7 +13,7 @@ class ProgramTransformer {
         val program = Program()
         return program.apply {
             name = programRequestDto.name
-            level = WorkoutLevel.valueOf(programRequestDto.level!!.toUpperCase())
+            level = WorkoutLevel.valueOf(programRequestDto.level!!.uppercase(Locale.getDefault()))
             description = programRequestDto.description
             equipments = programRequestDto.equipments
             designedFor = programRequestDto.designedFor

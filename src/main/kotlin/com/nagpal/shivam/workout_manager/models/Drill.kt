@@ -1,6 +1,6 @@
 package com.nagpal.shivam.workout_manager.models
 
-import javax.persistence.Entity
+import jakarta.persistence.Entity
 
 @Entity
 class Drill : BaseModel() {

@@ -1,6 +1,6 @@
 package com.nagpal.shivam.workout_manager.models
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 class StageWorkout : OrderedBaseModel() {

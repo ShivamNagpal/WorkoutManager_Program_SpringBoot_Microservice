@@ -8,10 +8,10 @@ import com.nagpal.shivam.workout_manager.dtos.response.StageResponseDto
 import com.nagpal.shivam.workout_manager.dtos.response.StageWorkoutResponseDto
 import com.nagpal.shivam.workout_manager.services.IStageService
 import com.nagpal.shivam.workout_manager.utils.Constants
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/stage")
