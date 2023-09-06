@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import java.util.*
+import java.util.UUID
 
 @Component
 class JwtFilter @Autowired constructor(private val jwtHelper: JwtHelper) : OncePerRequestFilter() {

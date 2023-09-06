@@ -12,4 +12,6 @@ object Constants {
     const val BEARER = "Bearer "
     const val USER_ID = "userId"
     const val ROLES = "roles"
+    const val REQUEST_ID = "requestId"
+    const val REQUEST_ARRIVAL_TIME = "requestArrivalTime"
 }

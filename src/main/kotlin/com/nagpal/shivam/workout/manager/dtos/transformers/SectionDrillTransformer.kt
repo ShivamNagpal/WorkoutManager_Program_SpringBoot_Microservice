@@ -8,7 +8,7 @@ import com.nagpal.shivam.workout.manager.models.Drill
 import com.nagpal.shivam.workout.manager.models.Section
 import com.nagpal.shivam.workout.manager.models.SectionDrill
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Locale
 
 @Component
 class SectionDrillTransformer {

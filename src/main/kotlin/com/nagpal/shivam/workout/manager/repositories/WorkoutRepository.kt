@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import java.util.*
+import java.util.Optional
 
 interface WorkoutRepository : CrudRepository<Workout, Long> {
     fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Workout>

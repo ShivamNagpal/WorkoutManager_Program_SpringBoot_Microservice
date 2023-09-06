@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 import java.security.KeyFactory
 import java.security.interfaces.RSAPublicKey
 import java.security.spec.X509EncodedKeySpec
-import java.util.*
+import java.util.Base64
 
 @Component
 class JwtHelper @Autowired constructor(@Value("\${auth.token.public.key}") val publicKeyString: String) : IJwtHelper {

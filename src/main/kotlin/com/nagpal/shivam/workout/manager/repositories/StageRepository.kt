@@ -4,7 +4,7 @@ import com.nagpal.shivam.workout.manager.models.Stage
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import java.util.*
+import java.util.Optional
 
 interface StageRepository : CrudRepository<Stage, Long> {
     @Query(value = "select max(s.order) from Stage s where s.program.id = :programId")
