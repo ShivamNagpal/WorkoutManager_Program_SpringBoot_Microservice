@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.4.30"
+    id("com.diffplug.spotless") version "6.21.0"
 }
 
 group = "com.nagpal.shivam"
@@ -57,6 +58,13 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
+}
+
+spotless {
+    kotlin {
+        ktlint()
+        endWithNewline()
+    }
 }
 
 tasks.withType<KotlinCompile> {
