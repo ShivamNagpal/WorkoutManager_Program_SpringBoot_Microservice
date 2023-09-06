@@ -61,12 +61,6 @@ dependencies {
 }
 
 spotless {
-    java {
-        removeUnusedImports()
-        googleJavaFormat().aosp().reorderImports(true)
-        endWithNewline()
-    }
-
     kotlin {
         ktlint()
         endWithNewline()
