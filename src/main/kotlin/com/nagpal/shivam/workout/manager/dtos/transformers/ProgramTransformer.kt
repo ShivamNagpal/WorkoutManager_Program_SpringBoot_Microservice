@@ -5,7 +5,7 @@ import com.nagpal.shivam.workout.manager.dtos.response.ProgramResponseDto
 import com.nagpal.shivam.workout.manager.enums.WorkoutLevel
 import com.nagpal.shivam.workout.manager.models.Program
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Locale
 
 @Component
 class ProgramTransformer {

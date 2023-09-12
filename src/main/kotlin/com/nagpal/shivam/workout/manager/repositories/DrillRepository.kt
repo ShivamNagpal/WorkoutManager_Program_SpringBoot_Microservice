@@ -3,7 +3,7 @@ package com.nagpal.shivam.workout.manager.repositories
 import com.nagpal.shivam.workout.manager.models.Drill
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
-import java.util.*
+import java.util.Optional
 
 interface DrillRepository : CrudRepository<Drill, Long> {
     fun findByIdAndDeleted(id: Long, deleted: Boolean = false): Optional<Drill>
