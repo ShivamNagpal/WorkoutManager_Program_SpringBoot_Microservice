@@ -6,10 +6,10 @@ import com.nagpal.shivam.workout.manager.exceptions.ResponseException
 import com.nagpal.shivam.workout.manager.helpers.impl.JwtHelper
 import com.nagpal.shivam.workout.manager.utils.Constants
 import com.nagpal.shivam.workout.manager.utils.ErrorMessages
-import io.netty.handler.codec.http.HttpResponseStatus
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
@@ -31,7 +31,7 @@ class JwtAuthenticationHandler @Autowired constructor(private val jwtHelper: Jwt
             if (authorizationHeader == null) {
                 writeResponse(
                     response,
-                    HttpResponseStatus.BAD_REQUEST.code(),
+                    HttpStatus.BAD_REQUEST.value(),
                     ResponseWrapper(null, ErrorMessages.AUTHORIZATION_HEADER_MUST_BE_PRESENT, false),
                 )
                 return
@@ -47,7 +47,7 @@ class JwtAuthenticationHandler @Autowired constructor(private val jwtHelper: Jwt
         }
         writeResponse(
             response,
-            HttpResponseStatus.FORBIDDEN.code(),
+            HttpStatus.FORBIDDEN.value(),
             ResponseWrapper(null, ErrorMessages.ACCESS_DENIED, false),
         )
     }
