@@ -31,19 +31,23 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
 }
-
+configurations {
+    all { exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging") }
+}
 dependencies {
     implementation(libs.spring.boot.actuator)
     implementation(libs.spring.boot.data.jpa)
     implementation(libs.spring.boot.web)
+    implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation(libs.spring.boot.validation)
     implementation(libs.spring.boot.security)
     implementation(libs.jackson.module.kotlin)
     implementation(libs.flyway.core)
     implementation(libs.auth0.jwt)
     implementation(libs.kotlin.reflect)
-    implementation(libs.logback.logstash.encoder)
+//    implementation(libs.logback.logstash.encoder)
 
+    annotationProcessor("org.apache.logging.log4j:log4j-core")
     developmentOnly(libs.spring.boot.devtools)
 
     runtimeOnly(libs.postgresql)

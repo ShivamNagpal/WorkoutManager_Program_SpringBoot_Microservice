@@ -21,7 +21,7 @@ class WebSecurityConfig @Autowired constructor(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/actuator", "/actuator/*").permitAll()
+                auth.requestMatchers("/actuator", "/actuator/*", "/health").permitAll()
                     .anyRequest()
                     .authenticated()
             }
