@@ -2,11 +2,11 @@ package com.nagpal.shivam.workout.manager.filters
 
 import com.nagpal.shivam.workout.manager.utils.Constants
 import com.nagpal.shivam.workout.manager.utils.FilterOrderingConstants
+import com.nagpal.shivam.workout.manager.utils.Slf4jUtils
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
-import org.slf4j.MDC
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -21,10 +21,20 @@ class HttpLoggingFilter : OncePerRequestFilter() {
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        MDC.put(Constants.REQUEST_ID, request.getAttribute(Constants.REQUEST_ID) as String)
-        filterChain.doFilter(request, response)
-        log.info("Request to {}: {} - {}", request.method, formURI(request), response.status)
-        MDC.remove(Constants.REQUEST_ID)
+        Slf4jUtils.mdcPutMulti(
+            mapOf(
+                Pair(Constants.REQUEST_ID, request.getAttribute(Constants.REQUEST_ID) as String),
+                Pair(Constants.HTTP_METHOD, request.method),
+                Pair(Constants.PATH, formURI(request)),
+            ),
+        )
+            .use {
+                log.info("HTTP Request received")
+                filterChain.doFilter(request, response)
+                Slf4jUtils.mdcPut(Constants.HTTP_STATUS, response.status.toString()).use {
+                    log.info("HTTP Request responded")
+                }
+            }
     }
 
     private fun formURI(request: HttpServletRequest): String {
