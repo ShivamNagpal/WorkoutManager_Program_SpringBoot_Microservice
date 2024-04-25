@@ -2,6 +2,7 @@
 apache-commons-text = "1.11.0"
 auth0-jwt = "3.18.3"
 kotlin-plugin = "1.9.23"
+logback-logstash-encoder = "7.4"
 spotless = "6.21.0"
 spring-boot = "3.2.4"
 spring-dependency-management = "1.1.4"
@@ -14,6 +15,7 @@ flyway-core = { module = "org.flywaydb:flyway-core" }
 jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
+logback-logstash-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logback-logstash-encoder" }
 postgresql = { module = "org.postgresql:postgresql" }
 springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "spring-doc" }
 spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }

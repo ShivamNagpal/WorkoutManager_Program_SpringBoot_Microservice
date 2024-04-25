@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.flyway.core)
     implementation(libs.auth0.jwt)
     implementation(libs.kotlin.reflect)
+    implementation(libs.logback.logstash.encoder)
 
     developmentOnly(libs.spring.boot.devtools)
 

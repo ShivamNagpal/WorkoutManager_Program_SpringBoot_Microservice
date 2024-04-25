@@ -13,5 +13,8 @@ object Constants {
     const val USER_ID = "userId"
     const val ROLES = "roles"
     const val REQUEST_ID = "requestId"
+    const val HTTP_METHOD = "httpMethod"
+    const val PATH = "path"
+    const val HTTP_STATUS = "status"
     const val REQUEST_ARRIVAL_TIME = "requestArrivalTime"
 }
